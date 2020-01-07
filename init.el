@@ -69,7 +69,8 @@
 (add-hook 'after-init-hook 'global-company-mode)
 
 ;; 显示行号
-(global-linum-mode 1)
+(global-display-line-numbers-mode 1)
+(setq display-line-numbers-type 'relative)
 
 ;; 关闭启动帮助画面
 (setq inhibit-splash-screen 1)
@@ -83,6 +84,7 @@
   (interactive)
   (load-file user-init-file))
 
+;;重载配置文件
 (global-set-key (kbd "<f3>") 'reload-init-file)    ; Reload .emacs file
 
 
