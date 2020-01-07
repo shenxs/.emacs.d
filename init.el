@@ -18,9 +18,7 @@
 		      ;;counsel
 		      smartparens
 		      ;; --- Major Mode ---
-		      ;;js2-mode
 		      ;; --- Minor Mode ---
-		      ;;nodejs-repl
 		      exec-path-from-shell
 		      evil
 		      evil-escape
