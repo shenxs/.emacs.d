@@ -24,6 +24,7 @@
 		      evil-escape
 		      ;; --- Themes ---
 		      monokai-theme
+		      one-themes
 		      ;;solarized-theme
 		      ) "Default packages")
 
@@ -77,6 +78,13 @@
 (defun open-init-file()
   (interactive)
   (find-file "~/.emacs.d/init.el"))
+
+(defun reload-init-file ()
+  (interactive)
+  (load-file user-init-file))
+
+(global-set-key (kbd "<f3>") 'reload-init-file)    ; Reload .emacs file
+
 
 ;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
 (global-set-key (kbd "<f2>") 'open-init-file)
