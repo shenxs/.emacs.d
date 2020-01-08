@@ -20,6 +20,7 @@
 		      exec-path-from-shell
 		      evil
 		      evil-escape
+		      evil-leader
 		      ;;version control
 		      magit
 		      ;; --- Themes ---
@@ -51,10 +52,12 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/evil")
+(add-to-list 'load-path "~/.emacs.d/lisp/snails")
 
 (require 'package)
 (require 'parenface)
 (require 'evil)
+(require 'snails)
 (package-initialize)
 
 (tool-bar-mode -1)
@@ -66,6 +69,8 @@
 (global-hl-line-mode 1)
 (define-key evil-motion-state-map ";" 'evil-ex)
 (setq-default evil-escape-key-sequence "jk")
+(global-evil-leader-mode)
+(evil-leader/set-leader "<SPC>")
 
 (load-theme 'one-light t)
 
@@ -89,10 +94,14 @@
 
 ;;重载配置文件
 (global-set-key (kbd "<f3>") 'reload-init-file)
-
-
 ;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
 (global-set-key (kbd "<f2>") 'open-init-file)
+
+(global-set-key (kbd "M-SPC") 'snails)
+(evil-leader/set-key
+  "<SPC>" 'execute-extended-command
+  "gs" 'magit-status)
+;; (global-set-key (kbd "SPC-SPC") 'execute-extended-command) 
 
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
@@ -105,6 +114,8 @@
       kept-new-versions 20   ; how many of the newest versions to keep
       kept-old-versions 5    ; and how many of the old
       )
+
+
 
 (set-face-foreground 'paren-face "DimGary")
 (autoload 'paredit-mode "paredit"
@@ -133,8 +144,7 @@
 	       (get-buffer scheme-buffer)
 	       (comint-check-proc scheme-buffer))
     (save-window-excursion
-      (run-scheme scheme-program-name)))
-  (or (scheme-get-process)
+      (run-scheme scheme-program-name)) (scheme-get-process)
       (error "No current process. See variable `scheme-buffer'")))
 
 (defun scheme-split-window ()
