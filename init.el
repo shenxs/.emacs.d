@@ -13,9 +13,8 @@
 		      company
 		      ;; --- Better Editor ---
 		      hungry-delete
-		      ;;swiper
-		      ;;counsel
 		      smartparens
+		      multi-term
 		      ;; --- Major Mode ---
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
@@ -110,15 +109,17 @@
   "Minor mode for pseudo-structurally editing Lisp code."
   t)
 
+(setq multi-term-program "/bin/zsh")
+
+;;;;;;;;;;;;
+;; Scheme
+;;;;;;;;;;;;
 (set-variable (quote scheme-program-name) "scheme")
 (setq scheme-program-name "scheme")
 (setq geiser-chez--binary "scheme")
 
 (add-to-list 'auto-mode-alist '("\\.sc\\'" . scheme-mode))
 
-;;;;;;;;;;;;
-;; Scheme
-;;;;;;;;;;;;
 
 (require 'cmuscheme)
 (setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
