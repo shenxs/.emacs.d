@@ -46,7 +46,9 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
-(server-start)
+(load "server")
+(unless (server-running-p) (server-start))
+
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/evil")
 
