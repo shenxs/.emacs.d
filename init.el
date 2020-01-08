@@ -20,6 +20,8 @@
 		      exec-path-from-shell
 		      evil
 		      evil-escape
+		      ;;version control
+		      magit
 		      ;; --- Themes ---
 		      monokai-theme
 		      one-themes
@@ -86,7 +88,7 @@
   (load-file user-init-file))
 
 ;;重载配置文件
-(global-set-key (kbd "<f3>") 'reload-init-file)    ; Reload .emacs file
+(global-set-key (kbd "<f3>") 'reload-init-file)
 
 
 ;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
