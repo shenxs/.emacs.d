@@ -62,7 +62,10 @@
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
+(if (display-graphic-p)
+    (progn
+      (scroll-bar-mode -1)
+      ))
 (evil-mode 1)
 (evil-escape-mode 1)
 (xterm-mouse-mode 1)
@@ -145,7 +148,7 @@
 	       (comint-check-proc scheme-buffer))
     (save-window-excursion
       (run-scheme scheme-program-name)) (scheme-get-process)
-      (error "No current process. See variable `scheme-buffer'")))
+    (error "No current process. See variable `scheme-buffer'")))
 
 (defun scheme-split-window ()
   (cond
