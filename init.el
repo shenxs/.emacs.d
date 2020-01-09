@@ -73,6 +73,7 @@
 (define-key evil-motion-state-map ";" 'evil-ex)
 (setq-default evil-escape-key-sequence "jk")
 (global-evil-leader-mode)
+(global-hungry-delete-mode)
 (evil-leader/set-leader "<SPC>")
 
 (load-theme 'one-light t)
@@ -100,15 +101,28 @@
 ;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
 (global-set-key (kbd "<f2>") 'open-init-file)
 
-(global-set-key (kbd "M-SPC") 'snails)
+(add-hook 'snails-mode-hook
+	  (lambda ()
+	    (evil-emacs-state)))
+
+(setq snails-default-backends
+      '(snails-backend-buffer
+	snails-backend-recentf
+	snails-backend-current-buffer
+	snails-backend-imenu
+	snails-backend-mdfind
+	snails-backend-bookmark
+	snails-backend-rg))
+
 (evil-leader/set-key
-  "<SPC>" 'execute-extended-command
+  "<SPC>" 'snails
   "gs" 'magit-status)
 ;; (global-set-key (kbd "SPC-SPC") 'execute-extended-command) 
 
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
   t)
+
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
       backup-by-copying t    ; Don't delink hardlinks
