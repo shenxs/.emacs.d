@@ -18,12 +18,13 @@
 		      ;; --- Major Mode ---
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
+		      magit
 		      evil
 		      evil-escape
 		      which-key
 		      evil-leader
+		      evil-magit
 		      ;;version control
-		      magit
 		      ;; --- Themes ---
 		      monokai-theme
 		      one-themes
@@ -76,6 +77,8 @@
 (global-evil-leader-mode)
 (global-hungry-delete-mode)
 (evil-leader/set-leader "<SPC>")
+
+(require 'evil-magit)
 
 (require 'which-key)
 (which-key-mode)
