@@ -113,6 +113,12 @@
 
 (global-set-key (kbd "M-q") 'kill-emacs)
 
+(global-set-key (kbd "M-c") 'evil-yank)
+
+(global-set-key (kbd "M-v") 'yank)
+(global-set-key (kbd "M-a") 'mark-whole-buffer)
+(global-set-key (kbd "M-x") 'kill-region)
+
 (add-hook 'snails-mode-hook
 	  (lambda ()
 	    (evil-emacs-state)))
