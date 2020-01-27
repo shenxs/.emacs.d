@@ -140,7 +140,14 @@
 (evil-leader/set-key
   "<SPC>" 'snails
   "gs" 'magit-status
-  "wd" 'delete-window)
+  "wd" 'delete-window
+  "hf" 'describe-function
+  "bp" 'previous-buffer
+  "bn" 'next-buffer
+  "hF" 'find-function-at-point)
+
+
+
 
 ;; (global-set-key (kbd "SPC-SPC") 'execute-extended-command) 
 
@@ -156,8 +163,6 @@
       kept-new-versions 20   ; how many of the newest versions to keep
       kept-old-versions 5    ; and how many of the old
       )
-
-
 
 (set-face-foreground 'paren-face "DimGary")
 (autoload 'paredit-mode "paredit"
@@ -184,7 +189,8 @@
   "Return the current Scheme process, starting one if necessary."
   (unless (and scheme-buffer
 	       (get-buffer scheme-buffer)
-	       (comint-check-proc scheme-buffer))
+	       (comint-check-proc scheme-buffer)
+	       )
     (save-window-excursion
       (run-scheme scheme-program-name)) (scheme-get-process)
     (error "No current process. See variable `scheme-buffer'")))
