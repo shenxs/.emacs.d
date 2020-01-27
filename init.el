@@ -26,6 +26,7 @@
 		      ;; --- Themes ---
 		      monokai-theme
 		      one-themes
+		      racket-mode
 		      ;;solarized-theme
 		      ) "Default packages")
 
