@@ -29,6 +29,7 @@
 		      monokai-theme
 		      one-themes
 		      racket-mode
+		      paredit
 		      ;;solarized-theme
 		      ) "Default packages")
 
@@ -120,6 +121,9 @@
 (global-set-key (kbd "M-a") 'mark-whole-buffer)
 (global-set-key (kbd "M-x") 'kill-region)
 
+
+(global-set-key (kbd "<f4>") 'delete-window)
+
 (add-hook 'snails-mode-hook
 	  (lambda ()
 	    (evil-emacs-state)))
@@ -135,7 +139,9 @@
 
 (evil-leader/set-key
   "<SPC>" 'snails
-  "gs" 'magit-status)
+  "gs" 'magit-status
+  "wd" 'delete-window)
+
 ;; (global-set-key (kbd "SPC-SPC") 'execute-extended-command) 
 
 (autoload 'paredit-mode "paredit"
