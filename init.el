@@ -16,20 +16,21 @@
 		      smartparens
 		      multi-term
 		      ;; --- Major Mode ---
+		      racket-mode
+		      paredit
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
-		      magit
 		      evil
 		      evil-escape
 		      which-key
 		      evil-leader
 		      evil-magit
 		      ;;version control
+		      magit
 		      ;; --- Themes ---
 		      monokai-theme
 		      one-themes
-		      racket-mode
-		      paredit
+		      spacemacs-theme
 		      ;;solarized-theme
 		      ) "Default packages")
 
@@ -84,7 +85,7 @@
 
 (require 'which-key)
 (which-key-mode)
-(load-theme 'one-light t)
+(load-theme 'spacemacs-dark t)
 
 (add-hook 'after-init-hook 'global-company-mode)
 
@@ -189,7 +190,7 @@
   "Return the current Scheme process, starting one if necessary."
   (unless (and scheme-buffer
 	       (get-buffer scheme-buffer)
-	       (comint-check-proc scheme-buffer)
+;;	       (comint-check-proc scheme-buffer)
 	       )
     (save-window-excursion
       (run-scheme scheme-program-name)) (scheme-get-process)
