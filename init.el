@@ -4,6 +4,10 @@
   (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
 			   ("melpa" . "http://elpa.emacs-china.org/melpa/"))))
 
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
 ;; cl - Common Lisp Extension
 (require 'cl)
 
@@ -59,18 +63,15 @@
 (add-to-list 'load-path "~/.emacs.d/evil")
 (add-to-list 'load-path "~/.emacs.d/lisp/snails")
 
+(require 'interface)
+
 (require 'package)
 (require 'parenface)
 (require 'evil)
 (require 'snails)
 (package-initialize)
 
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(if (display-graphic-p)
-    (progn
-      (scroll-bar-mode -1)
-      ))
+
 (evil-mode 1)
 (evil-escape-mode 1)
 (xterm-mouse-mode 1)
@@ -188,7 +189,7 @@
   "Return the current Scheme process, starting one if necessary."
   (unless (and scheme-buffer
 	       (get-buffer scheme-buffer)
-;;	       (comint-check-proc scheme-buffer)
+	       ;;	       (comint-check-proc scheme-buffer)
 	       )
     (save-window-excursion
       (run-scheme scheme-program-name)) (scheme-get-process)
