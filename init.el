@@ -120,7 +120,6 @@
 
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "M-a") 'mark-whole-buffer)
-(global-set-key (kbd "M-x") 'kill-region)
 
 
 (global-set-key (kbd "<f4>") 'delete-window)
@@ -146,7 +145,6 @@
   "bp" 'previous-buffer
   "bn" 'next-buffer
   "hF" 'find-function-at-point)
-
 
 
 
