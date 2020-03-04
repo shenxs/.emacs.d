@@ -64,14 +64,14 @@
 (add-to-list 'load-path "~/.emacs.d/evil")
 (add-to-list 'load-path "~/.emacs.d/lisp/snails")
 
-(require 'interface)
+(package-initialize)
 
+(require 'interface)
+(require 'myscheme)
 (require 'package)
 (require 'parenface)
 (require 'evil)
 (require 'snails)
-(package-initialize)
-
 
 (evil-mode 1)
 (evil-escape-mode 1)
@@ -88,21 +88,14 @@
 (require 'which-key)
 (which-key-mode)
 (load-theme 'spacemacs-dark t)
-
 (add-hook 'after-init-hook 'global-company-mode)
-
-;; 显示行号
-(global-display-line-numbers-mode 1)
-(setq display-line-numbers-type 'relative)
-
-;; 关闭启动帮助画面
-(setq inhibit-splash-screen 1)
 
 ;; 快速打开配置文件
 (defun open-init-file()
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+;;重新加载配置文件
 (defun reload-init-file ()
   (interactive)
   (load-file user-init-file))
@@ -111,19 +104,12 @@
 (global-set-key (kbd "<f3>") 'reload-init-file)
 ;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
 (global-set-key (kbd "<f2>") 'open-init-file)
-;;
 (global-set-key (kbd "M-n") 'new-frame)
-
 (global-set-key (kbd "M-w") 'delete-frame)
-
 (global-set-key (kbd "M-q") 'kill-emacs)
-
 (global-set-key (kbd "M-c") 'evil-yank)
-
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "M-a") 'mark-whole-buffer)
-
-
 (global-set-key (kbd "<f4>") 'delete-window)
 
 (add-hook 'snails-mode-hook
@@ -148,8 +134,6 @@
   "bn" 'next-buffer
   "hF" 'find-function-at-point)
 
-
-
 ;; (global-set-key (kbd "SPC-SPC") 'execute-extended-command) 
 
 (autoload 'paredit-mode "paredit"
@@ -172,61 +156,6 @@
 
 (setq multi-term-program "/bin/zsh")
 
-;;;;;;;;;;;;
-;; Scheme
-;;;;;;;;;;;;
-(set-variable (quote scheme-program-name) "scheme")
-(setq scheme-program-name "scheme")
-(setq geiser-chez--binary "scheme")
-
-(add-to-list 'auto-mode-alist '("\\.sc\\'" . scheme-mode))
-
-
-(require 'cmuscheme)
-(setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
-
-;; bypass the interactive question and start the default interpreter
-(defun scheme-proc ()
-  "Return the current Scheme process, starting one if necessary."
-  (unless (and scheme-buffer
-	       (get-buffer scheme-buffer)
-	       ;;	       (comint-check-proc scheme-buffer)
-	       )
-    (save-window-excursion
-      (run-scheme scheme-program-name)) (scheme-get-process)
-    (error "No current process. See variable `scheme-buffer'")))
-
-(defun scheme-split-window ()
-  (cond
-   ((= 1 (count-windows))
-    (delete-other-windows)
-    (split-window-vertically (floor (* 0.68 (window-height))))
-    (other-window 1)
-    (switch-to-buffer "*scheme*")
-    (other-window 1))
-   ((not (find "*scheme*"
-	       (mapcar (lambda (w) (buffer-name (window-buffer w)))
-		       (window-list))
-	       :test 'equal))
-    (other-window 1)
-    (switch-to-buffer "*scheme*")
-    (other-window -1))))
-
-(defun scheme-send-last-sexp-split-window ()
-  (interactive)
-  (scheme-split-window)
-  (scheme-send-last-sexp))
-
-(defun scheme-send-definition-split-window ()
-  (interactive)
-  (scheme-split-window)
-  (scheme-send-definition))
-
-(add-hook 'scheme-mode-hook
-	  (lambda ()
-	    (paredit-mode 1)
-	    (define-key scheme-mode-map (kbd "<f5>") 'scheme-send-last-sexp-split-window)
-	    (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-definition-split-window)))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
