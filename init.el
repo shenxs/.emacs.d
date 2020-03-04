@@ -21,6 +21,7 @@
 		      multi-term
 		      ;; --- Major Mode ---
 		      racket-mode
+		      lua-mode
 		      paredit
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
