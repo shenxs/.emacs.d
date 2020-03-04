@@ -165,7 +165,8 @@
   "//" 'evilnc-comment-or-uncomment-lines
   ";;" 'evilnc-comment-operator
   "qq" 'kill-emacs
-  "ff" 'helm-find-files)
+  "ff" 'helm-find-files
+  "bb" 'helm-buffers-list)
 
 (define-key evil-motion-state-map ";" 'evil-ex)
 
