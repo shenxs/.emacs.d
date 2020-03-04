@@ -2,6 +2,8 @@
 ;; 我的scheme配置
 ;;;;;;;;;;;;;;;;;;;;;;;
 
+(add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
+
 (set-variable (quote scheme-program-name) "scheme")
 (setq scheme-program-name "scheme")
 (setq geiser-chez--binary "scheme")

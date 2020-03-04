@@ -22,6 +22,7 @@
 		      ;; --- Major Mode ---
 		      racket-mode
 		      lua-mode
+		      rainbow-delimiters
 		      paredit
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
@@ -72,23 +73,24 @@
 (require 'parenface)
 (require 'evil)
 (require 'snails)
+(require 'evil-magit)
+(require 'which-key)
 
 (evil-mode 1)
 (evil-escape-mode 1)
 (xterm-mouse-mode 1)
 (global-hl-line-mode 1)
+(electric-pair-mode 1)
 (define-key evil-motion-state-map ";" 'evil-ex)
 (setq-default evil-escape-key-sequence "jk")
 (global-evil-leader-mode)
 (global-hungry-delete-mode)
 (evil-leader/set-leader "<SPC>")
-
-(require 'evil-magit)
-
-(require 'which-key)
 (which-key-mode)
-(load-theme 'spacemacs-dark t)
+
 (add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 
 ;; 快速打开配置文件
 (defun open-init-file()
@@ -133,12 +135,6 @@
   "bp" 'previous-buffer
   "bn" 'next-buffer
   "hF" 'find-function-at-point)
-
-;; (global-set-key (kbd "SPC-SPC") 'execute-extended-command) 
-
-(autoload 'paredit-mode "paredit"
-  "Minor mode for pseudo-structurally editing Lisp code."
-  t)
 
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))

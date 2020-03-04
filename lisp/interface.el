@@ -20,5 +20,7 @@
 (setq inhibit-splash-screen 1)
 
 
+;;设置主题
+(load-theme 'spacemacs-dark t)
 (provide 'interface)
 
