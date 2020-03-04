@@ -15,25 +15,18 @@
 (defvar my/packages '(
 		      use-package
 		      ;; --- Auto-completion ---
-		      company
 		      ;; --- Better Editor ---
-		      hungry-delete
 		      smartparens
 		      multi-term
 		      ;; --- Major Mode ---
-		      racket-mode
-		      lua-mode
-		      rainbow-delimiters
 		      paredit
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
 		      evil
 		      evil-escape
-		      which-key
 		      evil-leader
 		      evil-magit
-		      ;;version control
-		      magit
+		      evil-nerd-commenter
 		      ;; --- Themes ---
 		      monokai-theme
 		      one-themes
@@ -58,7 +51,7 @@
 ;; Find Executable Path on OS X
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
-
+(fset 'yes-or-no-p 'y-or-n-p)
 (load "server")
 (unless (server-running-p) (server-start))
 
@@ -66,36 +59,63 @@
 (add-to-list 'load-path "~/.emacs.d/evil")
 (add-to-list 'load-path "~/.emacs.d/lisp/snails")
 
-(package-initialize)
-
 (require 'interface)
 (require 'myscheme)
-(require 'package)
 (require 'parenface)
 (require 'evil)
 (require 'snails)
 (require 'evil-magit)
-(require 'which-key)
+(require 'evil-leader)
+
+(use-package helm
+  :ensure t)
+
+(use-package company
+  :ensure t
+  :config
+  :init (global-company-mode 1))
+
+(use-package magit
+  :ensure t)
+
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode))
+
+(use-package which-key
+  :ensure t
+  :init (which-key-mode))
+
+(use-package racket-mode)
+
+(use-package lua-mode)
+
+(use-package rainbow-delimiters
+  :ensure t
+  :hook ((lisp-mode . rainbow-delimiters-mode)
+	 (scheme-mode . rainbow-delimiters-mode)
+	 (emacs-lisp-mode . rainbow-delimiters-mode)
+	 (racket-mode . rainbow-delimiters-mode)))
+
+(use-package hungry-delete
+  :ensure t
+  :hook ((racket-mode . hungry-delete-mode))
+  :init
+  (global-hungry-delete-mode))
+
 
 (evil-mode 1)
 (evil-escape-mode 1)
 (xterm-mouse-mode 1)
 (global-hl-line-mode 1)
 (electric-pair-mode 1)
-(define-key evil-motion-state-map ";" 'evil-ex)
 (setq-default evil-escape-key-sequence "jk")
 (global-evil-leader-mode)
-(global-hungry-delete-mode)
 (evil-leader/set-leader "<SPC>")
-(which-key-mode)
-
-(add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
 
 ;; 快速打开配置文件
 (defun open-init-file()
@@ -109,6 +129,7 @@
 
 ;;重载配置文件
 (global-set-key (kbd "<f3>") 'reload-init-file)
+(global-set-key (kbd "<spc>-;-;") 'comment-line)
 ;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
 (global-set-key (kbd "<f2>") 'open-init-file)
 (global-set-key (kbd "M-n") 'new-frame)
@@ -140,8 +161,13 @@
   "bp" 'previous-buffer
   "bn" 'next-buffer
   "hF" 'find-function-at-point
-  "wc" 'whitespace-cleanup)
+  "wc" 'whitespace-cleanup
+  "//" 'evilnc-comment-or-uncomment-lines
+  ";;" 'evilnc-comment-operator
+  "qq" 'kill-emacs
+  "ff" 'helm-find-files)
 
+(define-key evil-motion-state-map ";" 'evil-ex)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -151,12 +177,10 @@
       kept-old-versions 5    ; and how many of the old
       )
 
-(set-face-foreground 'paren-face "DimGary")
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
   t)
 
-(setq multi-term-program "/bin/zsh")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
