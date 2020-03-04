@@ -13,6 +13,7 @@
 
 ;; Add Packages
 (defvar my/packages '(
+		      use-package
 		      ;; --- Auto-completion ---
 		      company
 		      ;; --- Better Editor ---
@@ -92,6 +93,10 @@
 (add-hook 'lisp-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
 
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
 ;; 快速打开配置文件
 (defun open-init-file()
   (interactive)
@@ -134,7 +139,8 @@
   "hf" 'describe-function
   "bp" 'previous-buffer
   "bn" 'next-buffer
-  "hF" 'find-function-at-point)
+  "hF" 'find-function-at-point
+  "wc" 'whitespace-cleanup)
 
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))

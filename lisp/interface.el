@@ -19,7 +19,6 @@
 ;; 关闭启动帮助画面
 (setq inhibit-splash-screen 1)
 
-
 ;;设置主题
 (load-theme 'spacemacs-dark t)
 (provide 'interface)
