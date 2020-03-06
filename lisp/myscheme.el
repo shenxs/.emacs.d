@@ -2,27 +2,39 @@
 ;; 我的scheme配置
 ;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-hook 'scheme-mode-hook #'rainbow-delimiters-mode)
-
-(set-variable (quote scheme-program-name) "scheme")
-(setq scheme-program-name "scheme")
-(setq geiser-chez--binary "scheme")
+;;; Code:
 
 (add-to-list 'auto-mode-alist '("\\.sc\\'" . scheme-mode))
 
-(require 'cmuscheme)
-(setq scheme-program-name "scheme")         ;; 如果用 Petite 就改成 "petite"
+(autoload 'paredit-mode "paredit"
+  "Minor mode for pseudo-structurally editing Lisp code."
+  t)
 
-;; bypass the interactive question and start the default interpreter
+(require 'cmuscheme)
+(setq scheme-program-name "scheme")
+
+
+;;绕过交互式启动限制 设置默认scheme实现
 (defun scheme-proc ()
-  "Return the current Scheme process, starting one if necessary."
+  "Return the current Scheme process, starting one if necessary.
+See variable `scheme-buffer'."
   (unless (and scheme-buffer
 	       (get-buffer scheme-buffer)
-	       ;;	       (comint-check-proc scheme-buffer)
-	       )
+	       (comint-check-proc scheme-buffer))
     (save-window-excursion
-      (run-scheme scheme-program-name)) (scheme-get-process)
-    (error "No current process. See variable `scheme-buffer'")))
+      (run-scheme scheme-program-name)))
+  (or (scheme-get-process)
+      (error "No current process.  See variable `scheme-buffer'")))
+
+;;发送整个buffer到scheme
+(defun scheme-send-buffer ()
+  "Send the current buffer to the inferior Scheme process."
+  (interactive)
+  (save-excursion
+   (end-of-buffer)
+   (let ((end (point)))
+     (beginning-of-buffer)
+     (scheme-send-region (point) end))))
 
 (defun scheme-split-window ()
   (cond
@@ -50,11 +62,17 @@
   (scheme-split-window)
   (scheme-send-definition))
 
+(defun scheme-send-buffer-split-window ()
+  (interactive)
+  (scheme-split-window)
+  (scheme-send-buffer))
+
 (add-hook 'scheme-mode-hook
 	  (lambda ()
 	    (paredit-mode 1)
-	    (define-key scheme-mode-map (kbd "<f5>") 'scheme-send-last-sexp-split-window)
+	    (define-key scheme-mode-map (kbd "<f5>") 'scheme-send-buffer-split-window)
+	    (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-last-sexp-split-window)
 	    (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-definition-split-window)))
 
 (provide 'myscheme)
-
+;;; myscheme.el ends here
