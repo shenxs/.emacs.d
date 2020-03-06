@@ -1,4 +1,5 @@
 
+;;; Code:
 ;;设置字体
 (set-frame-font "Hack 13" nil t)
 ;;关闭工具栏
@@ -21,5 +22,7 @@
 
 ;;设置主题
 (load-theme 'spacemacs-dark t)
+
 (provide 'interface)
+;;; interface.el ends here
 
