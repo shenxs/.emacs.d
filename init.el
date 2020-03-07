@@ -108,6 +108,9 @@
   (global-hungry-delete-mode))
 
 
+(global-set-key (kbd "<mouse-4>") 'scroll-down-line)
+(global-set-key (kbd "<mouse-5>") 'scroll-up-line)
+
 (evil-mode 1)
 (evil-escape-mode 1)
 (xterm-mouse-mode 1)
