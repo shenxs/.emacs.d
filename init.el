@@ -183,7 +183,7 @@
 	(split-window-vertically (floor (* 0.68 (window-height))))
 	(other-window 1)
 	(switch-to-buffer buffer-name))
-       (t (other-window 1))))))
+       (t (switch-to-buffer-other-window buffer-name))))))
 
 (evil-leader/set-key
   "<SPC>" 'snails
