@@ -14,7 +14,7 @@
       ))
 
 ;; 显示行号
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (setq display-line-numbers-type 'relative)
 
 ;; 关闭启动帮助画面

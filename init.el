@@ -14,7 +14,6 @@
 ;; Add Packages
 (defvar my/packages '(
 		      use-package
-		      ;; --- Auto-completion ---
 		      ;; --- Better Editor ---
 		      smartparens
 		      multi-term
@@ -59,6 +58,8 @@
 (add-to-list 'load-path "~/.emacs.d/evil")
 (add-to-list 'load-path "~/.emacs.d/lisp/snails")
 
+(require 'key-binding)
+(require 'better-default)
 (require 'interface)
 (require 'myscheme)
 (require 'parenface)
@@ -66,6 +67,7 @@
 (require 'snails)
 (require 'evil-magit)
 (require 'evil-leader)
+
 
 (use-package helm
   :ensure t)
@@ -90,9 +92,11 @@
   :ensure t
   :init (which-key-mode))
 
-(use-package racket-mode)
+(use-package racket-mode
+  :ensure t)
 
-(use-package lua-mode)
+(use-package lua-mode
+  :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -108,9 +112,6 @@
   (global-hungry-delete-mode))
 
 
-(global-set-key (kbd "<mouse-4>") 'scroll-down-line)
-(global-set-key (kbd "<mouse-5>") 'scroll-up-line)
-
 (evil-mode 1)
 (evil-escape-mode 1)
 (xterm-mouse-mode 1)
@@ -119,29 +120,6 @@
 (setq-default evil-escape-key-sequence "jk")
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
-
-;; 快速打开配置文件
-(defun open-init-file()
-  (interactive)
-  (find-file "~/.emacs.d/init.el"))
-
-;;重新加载配置文件
-(defun reload-init-file ()
-  (interactive)
-  (load-file user-init-file))
-
-;;重载配置文件
-(global-set-key (kbd "<f3>") 'reload-init-file)
-(global-set-key (kbd "<spc>-;-;") 'comment-line)
-;; 这一行代码，将函数 open-init-file 绑定到 <f2> 键上
-(global-set-key (kbd "<f2>") 'open-init-file)
-(global-set-key (kbd "M-n") 'new-frame)
-(global-set-key (kbd "M-w") 'delete-frame)
-(global-set-key (kbd "M-q") 'kill-emacs)
-(global-set-key (kbd "M-c") 'evil-yank)
-(global-set-key (kbd "M-v") 'yank)
-(global-set-key (kbd "M-a") 'mark-whole-buffer)
-(global-set-key (kbd "<f4>") 'delete-window)
 
 (add-hook 'snails-mode-hook
 	  (lambda ()
@@ -156,6 +134,57 @@
 	snails-backend-bookmark
 	snails-backend-rg))
 
+(defun bottom-split-window (name)
+  (cond
+   ((= 1 (count-windows))
+    (delete-other-windows)
+    (split-window-vertically (floor (* 0.68 (window-height))))
+    (other-window 1)
+    ;; (switch-to-buffer name)
+    ;; (other-window 1)
+    )
+   ((not (find name
+	       (mapcar (lambda (w) (buffer-name (window-buffer w)))
+		       (window-list))
+	       :test 'equal))
+    (other-window 1)
+    ;; (switch-to-buffer name)
+    ;; (other-window -1)
+    )))
+
+(defun oleh-term-exec-hook ()
+  (let* ((buff (current-buffer))
+         (proc (get-buffer-process buff)))
+    (set-process-sentinel
+     proc
+     `(lambda (process event)
+        (if (string= event "finished\n")
+	    (and (kill-buffer ,buff)
+		 (delete-window)))))))
+
+(add-hook 'term-exec-hook 'oleh-term-exec-hook)
+
+(defun toggle-ansi-term ()
+  (interactive)
+  (if (string-prefix-p "*ansi-term*" (buffer-name (current-buffer)) )
+       (delete-window)
+    (let ((buffer-name "*ansi-term*"))
+      (cond
+       ((not (find buffer-name
+		   (mapcar (lambda (b) (buffer-name b)) (buffer-list))
+		   :test 'equal))
+	(split-window-vertically (floor (* 0.68 (window-height))))
+	(other-window 1)
+	(ansi-term "zsh"))
+       ((not (find buffer-name
+		   (mapcar (lambda (w) (buffer-name (window-buffer w)))
+			   (window-list))
+		   :test 'equal))
+	(split-window-vertically (floor (* 0.68 (window-height))))
+	(other-window 1)
+	(switch-to-buffer buffer-name))
+       (t (other-window 1))))))
+
 (evil-leader/set-key
   "<SPC>" 'snails
   "gs" 'magit-status
@@ -169,7 +198,8 @@
   ";;" 'evilnc-comment-operator
   "qq" 'kill-emacs
   "ff" 'helm-find-files
-  "bb" 'helm-buffers-list)
+  "bb" 'helm-buffers-list
+  "'"  'toggle-ansi-term)
 
 (define-key evil-motion-state-map ";" 'evil-ex)
 

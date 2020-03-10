@@ -10,6 +10,14 @@
   "Minor mode for pseudo-structurally editing Lisp code."
   t)
 
+(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+
 (require 'cmuscheme)
 (setq scheme-program-name "scheme")
 
@@ -31,10 +39,10 @@ See variable `scheme-buffer'."
   "Send the current buffer to the inferior Scheme process."
   (interactive)
   (save-excursion
-   (end-of-buffer)
-   (let ((end (point)))
-     (beginning-of-buffer)
-     (scheme-send-region (point) end))))
+    (end-of-buffer)
+    (let ((end (point)))
+      (beginning-of-buffer)
+      (scheme-send-region (point) end))))
 
 (defun scheme-split-window ()
   (cond
@@ -71,8 +79,10 @@ See variable `scheme-buffer'."
 	  (lambda ()
 	    (paredit-mode 1)
 	    (define-key scheme-mode-map (kbd "<f5>") 'scheme-send-buffer-split-window)
+	    (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-definition-split-window)
 	    (define-key scheme-mode-map (kbd "<f7>") 'scheme-send-last-sexp-split-window)
-	    (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-definition-split-window)))
+	    ))
 
 (provide 'myscheme)
 ;;; myscheme.el ends here
+
