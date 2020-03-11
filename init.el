@@ -4,10 +4,6 @@
   (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
 			   ("melpa" . "http://elpa.emacs-china.org/melpa/"))))
 
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-
 (load "server")
 (unless (server-running-p) (server-start))
 
