@@ -17,6 +17,8 @@
 		      ;; --- Better Editor ---
 		      smartparens
 		      multi-term
+		      lsp-mode
+		      company-lsp
 		      ;; --- Major Mode ---
 		      paredit
 		      ;; --- Minor Mode ---
@@ -62,6 +64,8 @@
 (require 'better-default)
 (require 'interface)
 (require 'myscheme)
+(require 'lsp-init)
+
 (require 'parenface)
 (require 'evil)
 (require 'snails)
@@ -134,40 +138,24 @@
 	snails-backend-bookmark
 	snails-backend-rg))
 
-(defun bottom-split-window (name)
-  (cond
-   ((= 1 (count-windows))
-    (delete-other-windows)
-    (split-window-vertically (floor (* 0.68 (window-height))))
-    (other-window 1)
-    ;; (switch-to-buffer name)
-    ;; (other-window 1)
-    )
-   ((not (find name
-	       (mapcar (lambda (w) (buffer-name (window-buffer w)))
-		       (window-list))
-	       :test 'equal))
-    (other-window 1)
-    ;; (switch-to-buffer name)
-    ;; (other-window -1)
-    )))
 
 (defun oleh-term-exec-hook ()
   (let* ((buff (current-buffer))
-         (proc (get-buffer-process buff)))
+	 (win  (selected-window))
+	 (proc (get-buffer-process buff)))
     (set-process-sentinel
      proc
      `(lambda (process event)
-        (if (string= event "finished\n")
+	(if (string= event "finished\n")
 	    (and (kill-buffer ,buff)
-		 (delete-window)))))))
+		 (delete-window ,win)))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
 
 (defun toggle-ansi-term ()
   (interactive)
   (if (string-prefix-p "*ansi-term*" (buffer-name (current-buffer)) )
-       (delete-window)
+      (delete-window)
     (let ((buffer-name "*ansi-term*"))
       (cond
        ((not (find buffer-name
