@@ -5,3 +5,4 @@ auto-save-list
 .cache
 transient
 recentf*
+.lsp-session*
