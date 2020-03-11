@@ -61,6 +61,15 @@
 (require 'myscheme)
 (require 'lsp-init)
 
+
+
+(use-package benchmark-init
+  :ensure t
+  :init
+  (benchmark-init/activate)
+  :hook
+  (after-init . benchmark-init/deactivate))
+
 (use-package helm
   :ensure t)
 
@@ -207,4 +216,6 @@ Kill buffer and close Window after the term exit."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(snails-content-buffer-face ((t (:background "#111" :height 110))))
+ '(snails-header-line-face ((t (:inherit font-lock-function-name-face :underline t :height 1.1))))
+ '(snails-input-buffer-face ((t (:background "#222" :foreground "gold" :height 110)))))
