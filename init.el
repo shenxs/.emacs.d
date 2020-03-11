@@ -33,11 +33,12 @@
 		      one-themes
 		      spacemacs-theme
 		      ;;solarized-theme
-		      ) "Default packages")
+		      ) "Default packages.")
 
 (setq package-selected-packages my/packages)
 
 (defun my/packages-installed-p ()
+  "Check if all the package is installed."
   (loop for pkg in my/packages
 	when (not (package-installed-p pkg)) do (return nil)
 	finally (return t)))
@@ -140,6 +141,8 @@
 
 
 (defun oleh-term-exec-hook ()
+  "Term terinate hook.
+Kill buffer and close Window after the term exit."
   (let* ((buff (current-buffer))
 	 (win  (selected-window))
 	 (proc (get-buffer-process buff)))
@@ -153,6 +156,7 @@
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
 
 (defun toggle-ansi-term ()
+  "Toggle ansi term bottom."
   (interactive)
   (if (string-prefix-p "*ansi-term*" (buffer-name (current-buffer)) )
       (delete-window)
