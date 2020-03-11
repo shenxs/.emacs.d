@@ -1,6 +1,7 @@
 ;;; parenface.el --- Provide a face for parens in lisp modes.
 ;; Based on parenface.el from Dave Pearson <davep@davep.org>
 
+;;; Code:
 (defvar paren-face 'paren-face)
 
 (defface paren-face
@@ -17,7 +18,7 @@
        (unless (eq (cdr match) paren-face)
 	 (setq ,keywords (cons (cons regexp paren-face) ,keywords))))))
 
-(add-hook 'yin-mode-hook              (paren-face-add-support yin-font-lock-keywords))
+;; (add-hook 'yin-mode-hook              (paren-face-add-support yin-font-lock-keywords))
 (add-hook 'scheme-mode-hook           (paren-face-add-support scheme-font-lock-keywords-2))
 (add-hook 'lisp-mode-hook             (paren-face-add-support lisp-font-lock-keywords-2))
 (add-hook 'emacs-lisp-mode-hook       (paren-face-add-support lisp-font-lock-keywords-2))

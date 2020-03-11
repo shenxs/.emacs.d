@@ -8,8 +8,11 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
+(load "server")
+(unless (server-running-p) (server-start))
+
 ;; cl - Common Lisp Extension
-(require 'cl)
+(require 'cl-lib)
 
 ;; Add Packages
 (defvar my/packages '(
@@ -18,7 +21,7 @@
 		      smartparens
 		      multi-term
 		      lsp-mode
-		      company-lsp
+        	      company-lsp
 		      ;; --- Major Mode ---
 		      paredit
 		      ;; --- Minor Mode ---
@@ -30,6 +33,7 @@
 		      evil-nerd-commenter
 		      ;; --- Themes ---
 		      monokai-theme
+		      doom-themes
 		      one-themes
 		      spacemacs-theme
 		      ;;solarized-theme
@@ -39,7 +43,7 @@
 
 (defun my/packages-installed-p ()
   "Check if all the package is installed."
-  (loop for pkg in my/packages
+  (cl-loop for pkg in my/packages
 	when (not (package-installed-p pkg)) do (return nil)
 	finally (return t)))
 
@@ -50,29 +54,16 @@
     (when (not (package-installed-p pkg))
       (package-install pkg))))
 
-;; Find Executable Path on OS X
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-(fset 'yes-or-no-p 'y-or-n-p)
-(load "server")
-(unless (server-running-p) (server-start))
-
 (add-to-list 'load-path "~/.emacs.d/lisp")
-(add-to-list 'load-path "~/.emacs.d/evil")
-(add-to-list 'load-path "~/.emacs.d/lisp/snails")
 
-(require 'key-binding)
-(require 'better-default)
 (require 'interface)
-(require 'myscheme)
-(require 'lsp-init)
-
-(require 'parenface)
+(require 'key-binding)
 (require 'evil)
-(require 'snails)
 (require 'evil-magit)
 (require 'evil-leader)
-
+(require 'better-default)
+(require 'myscheme)
+(require 'lsp-init)
 
 (use-package helm
   :ensure t)
@@ -88,10 +79,6 @@
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode))
 
 (use-package which-key
   :ensure t
@@ -114,17 +101,38 @@
   :ensure t
   :hook ((racket-mode . hungry-delete-mode))
   :init
-  (global-hungry-delete-mode))
+  (global-hungry-delete-mode 1))
 
+(use-package snails
+  :load-path (lambda () (expand-file-name "lisp/snails/" user-emacs-directory))
+  :if (display-graphic-p)
+  :custom-face
+  (snails-content-buffer-face ((t (:background "#111" :height 110))))
+  (snails-input-buffer-face ((t (:background "#222" :foreground "gold" :height 110))))
+  (snails-header-line-face ((t (:inherit font-lock-function-name-face :underline t :height 1.1))))
+  :init
+  (use-package exec-path-from-shell :if (featurep 'cocoa) :defer t)
+  :config
+  ;; Functions for specific backends
+  (defun snails-current-project ()
+    (interactive)
+    (snails '(snails-backend-projectile snails-backend-rg snails-backend-fd)))
+  (defun snails-active-recent-buffers ()
+    (interactive)
+    (snails '(snails-backend-buffer snails-backend-recentf)))
+  (defun snails-everywhere ()
+    (interactive)
+    (snails '(snails-backend-everything snails-backend-mdfind)))
+  :bind
+  (
+   ("M-s n" . snails)
+   ("M-s g" . snails-current-project)
+   ("M-s b" . snails-active-recent-buffers)
+   ("M-s e" . snails-everywhere)))
 
-(evil-mode 1)
-(evil-escape-mode 1)
-(xterm-mouse-mode 1)
-(global-hl-line-mode 1)
-(electric-pair-mode 1)
-(setq-default evil-escape-key-sequence "jk")
-(global-evil-leader-mode)
-(evil-leader/set-leader "<SPC>")
+(xterm-mouse-mode)
+(global-hl-line-mode)
+(electric-pair-mode)
 
 (add-hook 'snails-mode-hook
 	  (lambda ()
@@ -162,13 +170,13 @@ Kill buffer and close Window after the term exit."
       (delete-window)
     (let ((buffer-name "*ansi-term*"))
       (cond
-       ((not (find buffer-name
+       ((not (cl-find buffer-name
 		   (mapcar (lambda (b) (buffer-name b)) (buffer-list))
 		   :test 'equal))
 	(split-window-vertically (floor (* 0.68 (window-height))))
 	(other-window 1)
 	(ansi-term "zsh"))
-       ((not (find buffer-name
+       ((not (cl-find buffer-name
 		   (mapcar (lambda (w) (buffer-name (window-buffer w)))
 			   (window-list))
 		   :test 'equal))
@@ -177,23 +185,6 @@ Kill buffer and close Window after the term exit."
 	(switch-to-buffer buffer-name))
        (t (switch-to-buffer-other-window buffer-name))))))
 
-(evil-leader/set-key
-  "<SPC>" 'snails
-  "gs" 'magit-status
-  "wd" 'delete-window
-  "hf" 'describe-function
-  "bp" 'previous-buffer
-  "bn" 'next-buffer
-  "hF" 'find-function-at-point
-  "wc" 'whitespace-cleanup
-  "//" 'evilnc-comment-or-uncomment-lines
-  ";;" 'evilnc-comment-operator
-  "qq" 'kill-emacs
-  "ff" 'helm-find-files
-  "bb" 'helm-buffers-list
-  "'"  'toggle-ansi-term)
-
-(define-key evil-motion-state-map ";" 'evil-ex)
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
       backup-by-copying t    ; Don't delink hardlinks
@@ -202,6 +193,7 @@ Kill buffer and close Window after the term exit."
       kept-new-versions 20   ; how many of the newest versions to keep
       kept-old-versions 5    ; and how many of the old
       )
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

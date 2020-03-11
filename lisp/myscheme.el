@@ -6,10 +6,6 @@
 
 (add-to-list 'auto-mode-alist '("\\.sc\\'" . scheme-mode))
 
-(autoload 'paredit-mode "paredit"
-  "Minor mode for pseudo-structurally editing Lisp code."
-  t)
-
 (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
 (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
 (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
@@ -20,7 +16,7 @@
 
 (require 'cmuscheme)
 (setq scheme-program-name "scheme")
-
+;; (require 'parenface)
 
 ;;绕过交互式启动限制 设置默认scheme实现
 (defun scheme-proc ()
@@ -45,6 +41,7 @@ See variable `scheme-buffer'."
       (scheme-send-region (point) end))))
 
 (defun scheme-split-window ()
+  "Rt."
   (cond
    ((= 1 (count-windows))
     (delete-other-windows)
@@ -61,16 +58,19 @@ See variable `scheme-buffer'."
     (other-window -1))))
 
 (defun scheme-send-last-sexp-split-window ()
+  "Rt."
   (interactive)
   (scheme-split-window)
   (scheme-send-last-sexp))
 
 (defun scheme-send-definition-split-window ()
+  "Rt."
   (interactive)
   (scheme-split-window)
   (scheme-send-definition))
 
 (defun scheme-send-buffer-split-window ()
+  "Rt."
   (interactive)
   (scheme-split-window)
   (scheme-send-buffer))
