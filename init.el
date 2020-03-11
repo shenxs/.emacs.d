@@ -40,8 +40,8 @@
 (defun my/packages-installed-p ()
   "Check if all the package is installed."
   (cl-loop for pkg in my/packages
-	when (not (package-installed-p pkg)) do (return nil)
-	finally (return t)))
+	when (not (package-installed-p pkg)) do (cl-return nil)
+	finally (cl-return t)))
 
 (unless (my/packages-installed-p)
   (message "%s" "Refreshing package database...")
@@ -71,7 +71,8 @@
   (after-init . benchmark-init/deactivate))
 
 (use-package helm
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package company
   :ensure t
@@ -90,10 +91,13 @@
   :init (which-key-mode))
 
 (use-package racket-mode
-  :ensure t)
+  :ensure t
+  :defer t
+  )
 
 (use-package lua-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package rainbow-delimiters
   :ensure t
@@ -104,7 +108,7 @@
 
 (use-package hungry-delete
   :ensure t
-  :hook ((racket-mode . hungry-delete-mode))
+  :hook (racket-mode . hungry-delete-mode)
   :init
   (global-hungry-delete-mode 1))
 
