@@ -49,7 +49,7 @@ See variable `scheme-buffer'."
     (other-window 1)
     (switch-to-buffer "*scheme*")
     (other-window 1))
-   ((not (find "*scheme*"
+   ((not (cl-find "*scheme*"
 	       (mapcar (lambda (w) (buffer-name (window-buffer w)))
 		       (window-list))
 	       :test 'equal))
