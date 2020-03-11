@@ -1,8 +1,18 @@
+;;; init.el --- Richard's configuration
+
+;;; Commentary:
+;; This is my personal Emacs configuration.  Nothing more, nothing less.
+
+;;; Code:
 (when (>= emacs-major-version 24)
   (require 'package)
   (package-initialize)
   (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
 			   ("melpa" . "http://elpa.emacs-china.org/melpa/"))))
+
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+(setq gc-cons-threshold 50000000)
 
 (load "server")
 (unless (server-running-p) (server-start))
@@ -80,6 +90,7 @@
   :init (global-company-mode 1))
 
 (use-package magit
+  :defer t
   :ensure t)
 
 (use-package flycheck
@@ -223,3 +234,5 @@ Kill buffer and close Window after the term exit."
  '(snails-content-buffer-face ((t (:background "#111" :height 110))))
  '(snails-header-line-face ((t (:inherit font-lock-function-name-face :underline t :height 1.1))))
  '(snails-input-buffer-face ((t (:background "#222" :foreground "gold" :height 110)))))
+
+;;; init.el ends here

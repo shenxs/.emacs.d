@@ -8,13 +8,16 @@
 (setenv "LANG" "zh_CN.UTF-8")
 
 (show-paren-mode)
-(auto-revert-mode)
 
-;; Find Executable Path on OS X
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :ensure t
+  :config
+  (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize)
+  )
+
 (fset 'yes-or-no-p 'y-or-n-p)
-
 (setq ring-bell-function 'ignore)
 
 (provide 'better-default)
