@@ -8,6 +8,8 @@
 (setenv "LANG" "zh_CN.UTF-8")
 
 (show-paren-mode)
+;;display "lambda" as "λ"
+(global-prettify-symbols-mode)
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))

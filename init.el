@@ -167,6 +167,7 @@
 	snails-backend-bookmark
 	snails-backend-rg))
 
+;; TODO 退出term时依然会有问题，偶尔窗口不会关闭，待优化，不影响使用
 (defun oleh-term-exec-hook ()
   "Term terinate hook.
 Kill buffer and close Window after the term exit."
