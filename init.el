@@ -71,8 +71,6 @@
 (require 'myscheme)
 (require 'lsp-init)
 
-
-
 (use-package benchmark-init
   :ensure t
   :init
