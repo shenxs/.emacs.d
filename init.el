@@ -122,7 +122,7 @@
   (global-hungry-delete-mode 1))
 
 (use-package snails
-  :load-path (lambda () (expand-file-name "lisp/snails/" user-emacs-directory))
+  :load-path (lambda () (expand-file-name "lisp/snails" user-emacs-directory))
   :if (display-graphic-p)
   :custom-face
   (snails-content-buffer-face ((t (:background "#111" :height 110))))
@@ -141,6 +141,8 @@
   (defun snails-everywhere ()
     (interactive)
     (snails '(snails-backend-everything snails-backend-mdfind)))
+  (define-key snails-mode-map [remap next-line] #'snails-select-next-item)
+  (define-key snails-mode-map [remap previous-line] #'snails-select-prev-item)
   :bind
   (
    ("M-s n" . snails)
@@ -164,7 +166,6 @@
 	snails-backend-mdfind
 	snails-backend-bookmark
 	snails-backend-rg))
-
 
 (defun oleh-term-exec-hook ()
   "Term terinate hook.
