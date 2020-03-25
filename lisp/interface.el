@@ -50,7 +50,6 @@
 ;; (add-hook 'ediff-prepare-buffer-hook #'doom-buffer-mode)
 
 ;; brighter minibuffer when active
-()
 ;; (add-hook 'minibuffer-setup-hook #'doom-brighten-minibuffer)
 
 ;; Enable custom neotree theme
@@ -58,6 +57,10 @@
 
 ;; Enable nlinum line highlighting
 ;; (doom-themes-nlinum-config)   ; requires nlinum and hl-line-mode
+
+
+(display-battery-mode)
+(display-time-mode)
 
 (provide 'interface)
 ;;; interface.el ends here

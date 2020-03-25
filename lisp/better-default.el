@@ -22,5 +22,9 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq ring-bell-function 'ignore)
 
+(display-battery-mode)
+(display-time-mode)
+(toggle-truncate-lines)
+
 (provide 'better-default)
 ;;; better-default.el ends here
