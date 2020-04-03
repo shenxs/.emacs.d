@@ -150,51 +150,10 @@
   :init
   (global-hungry-delete-mode 1))
 
-(use-package snails
-  :load-path (lambda () (expand-file-name "lisp/snails" user-emacs-directory))
-  :if (display-graphic-p)
-  :custom-face
-  (snails-content-buffer-face ((t (:background "#111" :height 110))))
-  (snails-input-buffer-face ((t (:background "#222" :foreground "gold" :height 110))))
-  (snails-header-line-face ((t (:inherit font-lock-function-name-face :underline t :height 1.1))))
-  :init
-  (use-package exec-path-from-shell :if (featurep 'cocoa) :defer t)
-  :config
-  ;; Functions for specific backends
-  (defun snails-current-project ()
-    (interactive)
-    (snails '(snails-backend-projectile snails-backend-rg snails-backend-fd)))
-  (defun snails-active-recent-buffers ()
-    (interactive)
-    (snails '(snails-backend-buffer snails-backend-recentf)))
-  (defun snails-everywhere ()
-    (interactive)
-    (snails '(snails-backend-everything snails-backend-mdfind)))
-  (define-key snails-mode-map [remap next-line] #'snails-select-next-item)
-  (define-key snails-mode-map [remap previous-line] #'snails-select-prev-item)
-  :bind
-  (
-   ("M-s n" . snails)
-   ("M-s g" . snails-current-project)
-   ("M-s b" . snails-active-recent-buffers)
-   ("M-s e" . snails-everywhere)))
-
 (xterm-mouse-mode)
 (global-hl-line-mode)
 (electric-pair-mode)
 
-(add-hook 'snails-mode-hook
-	  (lambda ()
-	    (evil-emacs-state)))
-
-(setq snails-default-backends
-      '(snails-backend-buffer
-	snails-backend-recentf
-	snails-backend-current-buffer
-	snails-backend-imenu
-	snails-backend-mdfind
-	snails-backend-bookmark
-	snails-backend-rg))
 
 ;; TODO 退出term时依然会有问题，偶尔窗口不会关闭，待优化，不影响使用
 (defun oleh-term-exec-hook ()
@@ -255,13 +214,10 @@ Kill buffer and close Window after the term exit."
  '(package-selected-packages
    (quote
     (which-key company hungry-delete smartparens multi-term exec-path-from-shell evil evil-escape evil-leader magit monokai-theme one-themes))))
+;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(snails-content-buffer-face ((t (:background "#111" :height 110))))
- '(snails-header-line-face ((t (:inherit font-lock-function-name-face :underline t :height 1.1))))
- '(snails-input-buffer-face ((t (:background "#222" :foreground "gold" :height 110)))))
-
-;;; init.el ends here
+ )

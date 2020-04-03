@@ -3,13 +3,11 @@
 (global-set-key (kbd "<mouse-4>") 'scroll-down-line)
 (global-set-key (kbd "<mouse-5>") 'scroll-up-line)
 
-
 ;; 快速打开配置文件
 (defun open-init-file()
   "Open init file."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
-
 
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
@@ -34,7 +32,6 @@
 (setq-default evil-escape-key-sequence "jk")
 
 (evil-leader/set-key
-  "<SPC>" 'snails
   "gs" 'magit-status
   "wd" 'delete-window
   "hf" 'describe-function
@@ -61,5 +58,5 @@
 
 
 (provide 'key-binding)
-;;; key-binding.el ends here
 
+;;; key-binding.el ends here
