@@ -24,7 +24,7 @@
 
 (display-battery-mode)
 (display-time-mode)
-(toggle-truncate-lines)
+(toggle-truncate-lines 1)
 
 (provide 'better-default)
 ;;; better-default.el ends here

@@ -26,7 +26,6 @@
 		      ;; --- Better Editor ---
 		      smartparens
 		      multi-term
-		      lsp-mode
         	      company-lsp
 		      ;; --- Major Mode ---
 		      paredit
@@ -103,6 +102,36 @@
   :ensure t
   :defer t
   )
+(use-package quickrun
+  :ensure t
+  :defer t)
+
+(use-package rust-mode
+  :ensure t
+  :defer t)
+
+(use-package lsp-mode
+  :ensure t
+  :defer t
+  :hook (
+	 (python-mode . lsp-deferred)
+	 (c-mode . lsp-deferred)
+	 (c++-mode .lsp-deferred)
+	 (rust-mode . lsp-deferred)
+	 ))
+(setq company-minimum-prefix-length 1
+      company-idle-delay 0.0)
+;; optionally
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
+;; if you are helm user
+(use-package helm-lsp
+  :ensure t
+  :commands helm-lsp-workspace-symbol)
 
 (use-package lua-mode
   :ensure t
