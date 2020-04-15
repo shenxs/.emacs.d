@@ -25,6 +25,8 @@
 (global-set-key (kbd "M-c") 'evil-yank)
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "M-a") 'mark-whole-buffer)
+(global-set-key (kbd "M-[") 'previous-buffer)
+(global-set-key (kbd "M-]") 'next-buffer)
 
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
