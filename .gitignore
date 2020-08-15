@@ -10,3 +10,4 @@ workspace
 .lsp-session-v1
 eclipse.jdt.ls
 .dap-breakpoints
+projectile-bookmarks.eld
