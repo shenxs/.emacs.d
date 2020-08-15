@@ -25,6 +25,7 @@
 (display-battery-mode)
 (display-time-mode)
 (toggle-truncate-lines 1)
+(custom-set-variables '(tab-width 4))
 
 (provide 'better-default)
 ;;; better-default.el ends here
