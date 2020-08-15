@@ -4,21 +4,37 @@
 ;; This is my personal Emacs configuration.  Nothing more, nothing less.
 
 ;;; Code:
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (package-initialize)
-  (setq package-archives '(("gnu"   . "http://elpa.emacs-china.org/gnu/")
-			   ("melpa" . "http://elpa.emacs-china.org/melpa/"))))
+(load "server")
+(unless (server-running-p) (server-start))
+
 
 ;; reduce the frequency of garbage collection by making it happen on
 ;; each 50MB of allocated data (the default is on every 0.76MB)
 (setq gc-cons-threshold 50000000)
 
-(load "server")
-(unless (server-running-p) (server-start))
+;;netword proxy setting
+;; (setq url-gateway-method 'socks)
+;; (setq socks-server '("Default server" "127.0.0.1" 1080 5))
+
+
+;;set mirror
+(setq package-archives '(("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
+			 ("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+			 ))
+
+(condition-case nil
+    (require 'use-package)
+  (file-error
+   (require 'package)
+   (package-initialize)
+   (package-refresh-contents)
+   (package-install 'use-package)
+   (require 'use-package)))
+
+(setq use-package-always-ensure t)
 
 ;; cl - Common Lisp Extension
-(require 'cl-lib)
+;; (require 'cl-lib)
 
 ;; Add Packages
 (defvar my/packages '(
@@ -31,7 +47,6 @@
 		      paredit
 		      ;; --- Minor Mode ---
 		      exec-path-from-shell
-		      evil
 		      evil-escape
 		      evil-leader
 		      evil-magit
@@ -61,6 +76,7 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
+
 (require 'interface)
 (require 'key-binding)
 (require 'evil)
@@ -69,6 +85,8 @@
 (require 'better-default)
 (require 'myscheme)
 (require 'lsp-init)
+(require 'lsp-java)
+(add-hook 'java-mode-hook #'lsp)
 
 (use-package benchmark-init
   :ensure t
@@ -118,7 +136,10 @@
 	 (c-mode . lsp-deferred)
 	 (c++-mode .lsp-deferred)
 	 (rust-mode . lsp-deferred)
-	 ))
+	 (lsp-mode . lsp-enable-which-key-integration)
+	 )
+  :config (setq lsp-completion-enable-addtional-text-edit nil)
+  )
 (setq company-minimum-prefix-length 1
       company-idle-delay 0.0)
 ;; optionally
@@ -150,6 +171,25 @@
   :init
   (global-hungry-delete-mode 1))
 
+(use-package projectile)
+(use-package yasnippet :config (yas-global-mode))
+(use-package hydra)
+(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
+(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
+(use-package dap-java :ensure nil)
+(require 'lsp-java-boot)
+
+(setq lsp-java-vmargs
+      (list "-noverify"
+	    "-Xmx4G"
+	    "-XX:+UseG1GC"
+	    "-XX:+UseStringDeduplication"
+	    "-javaagent:/Users/richard/dev/lombok.jar"))
+
+;; to enable the lenses
+(add-hook 'lsp-mode-hook #'lsp-lens-mode)
+(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+
 (xterm-mouse-mode)
 (global-hl-line-mode)
 (electric-pair-mode)
@@ -170,6 +210,7 @@ Kill buffer and close Window after the term exit."
 		 (delete-window ,win)))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
+
 
 (defun toggle-ansi-term ()
   "Toggle ansi term bottom."
@@ -209,11 +250,9 @@ Kill buffer and close Window after the term exit."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   (quote
-    ("0dd2666921bd4c651c7f8a724b3416e95228a13fca1aa27dc0022f4e023bf197" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+   '("0dd2666921bd4c651c7f8a724b3416e95228a13fca1aa27dc0022f4e023bf197" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default))
  '(package-selected-packages
-   (quote
-    (which-key company hungry-delete smartparens multi-term exec-path-from-shell evil evil-escape evil-leader magit monokai-theme one-themes))))
+   '(yasnippet projectile lsp-java which-key company hungry-delete smartparens multi-term exec-path-from-shell evil evil-escape evil-leader magit monokai-theme one-themes)))
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
