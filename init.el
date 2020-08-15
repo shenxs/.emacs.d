@@ -43,7 +43,6 @@
 
 (require 'myscheme)
 (require 'lsp-init)
-(require 'lsp-java)
 (add-hook 'java-mode-hook #'lsp)
 
 (use-package monokai-theme)
@@ -75,12 +74,62 @@
 (use-package multi-term)
 
 
-(use-package helm
+(use-package projectile
+  :bind
+  (("C-c p f" . projectile-find-file))
+  :init
+  (setq projectile-enable-caching t
+        projectile-globally-ignored-file-suffixes
+        '(
+          "blob"
+          "class"
+          "classpath"
+          "gz"
+          "iml"
+          "ipr"
+          "jar"
+          "pyc"
+          "tkj"
+          "war"
+          "xd"
+          "zip"
+          )
+        projectile-globally-ignored-files '("TAGS" "*~")
+        projectile-tags-command "/usr/bin/ctags -Re -f \"%s\" %s"
+        projectile-mode-line '(:eval (format " [%s]" (projectile-project-name)))
+        )
+  :config
+  (projectile-global-mode)
+
+  (setq projectile-globally-ignored-directories
+        (append (list
+                 ".pytest_cache"
+                 "__pycache__"
+                 "build"
+                 "elpa"
+                 "node_modules"
+                 "output"
+                 "reveal.js"
+                 "semanticdb"
+                 "target"
+                 "venv"
+                 )
+                projectile-globally-ignored-directories))
+  )
+
+(use-package imenu-list
   :ensure t
+  :config
+  (setq imenu-list-focus-after-activation t))
+
+
+
+(use-package helm
   :defer t)
 
 (use-package company
-  :ensure t
+  :init
+  (setq company-backends '((company-files company-keywords company-capf company-dabbrev-code company-etags company-dabbrev)))
   :config
   (use-package company-lsp)
   :init (global-company-mode 1))
@@ -155,21 +204,63 @@
 (use-package projectile)
 (use-package yasnippet :config (yas-global-mode))
 (use-package hydra)
-(use-package lsp-java :config (add-hook 'java-mode-hook 'lsp))
-(use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
-(use-package dap-java :ensure nil)
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-doc-delay 5.0
+	lsp-ui-sideline-enable nil
+	lsp-ui-sideline-show-symbol nil))
+(use-package lsp-java
+  :init
+  
+  (setq lsp-java-vmargs
+	(list "-noverify"
+	      "-Xmx4G"
+	      "-XX:+UseG1GC"
+	      "-XX:+UseStringDeduplication"
+	      "-javaagent:/Users/richard/dev/lombok.jar")
+	lsp-java-save-actions-organize-imports nil
+	)
+  
+  :config
+  (add-hook 'java-mode-hook #'lsp)
+  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
+  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
+  )
+
+(use-package dap-mode
+  :ensure t
+  :after lsp-mode
+  :config
+  (dap-mode t)
+  (dap-ui-mode t)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
+  (dap-register-debug-template
+   "localhost:5005"
+   (list :type "java"
+	 :request "attach"
+	 :hostName "localhost"
+	 :port 5005))
+  (dap-register-debug-template
+   "lxd"
+   (list :type "java"
+	 :request "attach"
+	 :hostName "10.152.112.168"
+	 :port 5005))
+  )
+
+(use-package dap-java
+  :ensure nil
+  :after (lsp-java))
 (require 'lsp-java-boot)
 
-(setq lsp-java-vmargs
-      (list "-noverify"
-	    "-Xmx4G"
-	    "-XX:+UseG1GC"
-	    "-XX:+UseStringDeduplication"
-	    "-javaagent:/Users/richard/dev/lombok.jar"))
+
+(use-package treemacs
+  :init
+  (add-hook 'treemacs-mode-hook
+            (lambda () (treemacs-resize-icons 15))))
 
 ;; to enable the lenses
-(add-hook 'lsp-mode-hook #'lsp-lens-mode)
-(add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
 
 (xterm-mouse-mode)
 (global-hl-line-mode)
@@ -201,15 +292,15 @@ Kill buffer and close Window after the term exit."
     (let ((buffer-name "*ansi-term*"))
       (cond
        ((not (cl-find buffer-name
-		   (mapcar (lambda (b) (buffer-name b)) (buffer-list))
-		   :test 'equal))
+		      (mapcar (lambda (b) (buffer-name b)) (buffer-list))
+		      :test 'equal))
 	(split-window-vertically (floor (* 0.68 (window-height))))
 	(other-window 1)
 	(ansi-term "zsh"))
        ((not (cl-find buffer-name
-		   (mapcar (lambda (w) (buffer-name (window-buffer w)))
-			   (window-list))
-		   :test 'equal))
+		      (mapcar (lambda (w) (buffer-name (window-buffer w)))
+			      (window-list))
+		      :test 'equal))
 	(split-window-vertically (floor (* 0.68 (window-height))))
 	(other-window 1)
 	(switch-to-buffer buffer-name))
