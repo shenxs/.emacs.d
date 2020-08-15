@@ -43,7 +43,6 @@
 
 (require 'myscheme)
 (require 'lsp-init)
-(add-hook 'java-mode-hook #'lsp)
 
 (use-package monokai-theme
   :defer t)
@@ -54,7 +53,10 @@
 (use-package solarized-theme
   :defer t)
 (use-package exec-path-from-shell
-  :defer t)
+  :config
+  (when (memq window-system '(mac ns x))
+	(exec-path-from-shell-initialize))
+  )
 
 (use-package evil
   :defer .1
@@ -88,42 +90,42 @@
   (("C-c p f" . projectile-find-file))
   :init
   (setq projectile-enable-caching t
-        projectile-globally-ignored-file-suffixes
-        '(
-          "blob"
-          "class"
-          "classpath"
-          "gz"
-          "iml"
-          "ipr"
-          "jar"
-          "pyc"
-          "tkj"
-          "war"
-          "xd"
-          "zip"
-          )
-        projectile-globally-ignored-files '("TAGS" "*~")
-        projectile-tags-command "/usr/bin/ctags -Re -f \"%s\" %s"
-        projectile-mode-line '(:eval (format " [%s]" (projectile-project-name)))
-        )
+		projectile-globally-ignored-file-suffixes
+		'(
+		  "blob"
+		  "class"
+		  "classpath"
+		  "gz"
+		  "iml"
+		  "ipr"
+		  "jar"
+		  "pyc"
+		  "tkj"
+		  "war"
+		  "xd"
+		  "zip"
+		  )
+		projectile-globally-ignored-files '("TAGS" "*~")
+		projectile-tags-command "/usr/bin/ctags -Re -f \"%s\" %s"
+		projectile-mode-line '(:eval (format " [%s]" (projectile-project-name)))
+		)
   :config
   (projectile-global-mode)
 
   (setq projectile-globally-ignored-directories
-        (append (list
-                 ".pytest_cache"
-                 "__pycache__"
-                 "build"
-                 "elpa"
-                 "node_modules"
-                 "output"
-                 "reveal.js"
-                 "semanticdb"
-                 "target"
-                 "venv"
-                 )
-                projectile-globally-ignored-directories))
+		(append (list
+				 ".pytest_cache"
+				 "__pycache__"
+				 "build"
+				 "elpa"
+				 "node_modules"
+				 "output"
+				 "reveal.js"
+				 "semanticdb"
+				 "target"
+				 "venv"
+				 )
+				projectile-globally-ignored-directories))
   )
 
 (use-package imenu-list
@@ -164,18 +166,21 @@
 
 (use-package lsp-mode
   :ensure t
+  :config
+  (add-hook 'c-mode-hook #'lsp)
+  (add-hook 'c++-mode-hook #'lsp)
+  (add-hook 'python-mode-hook #'lsp)
+  (add-hook 'rust-mode-hook #'lsp)
+  (add-hook 'java-mode-hook #'lsp)
+  (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
   :defer t
   :hook (
-	 (python-mode . lsp-deferred)
-	 (c-mode . lsp-deferred)
-	 (c++-mode .lsp-deferred)
-	 (rust-mode . lsp-deferred)
-	 (lsp-mode . lsp-enable-which-key-integration)
-	 )
+		 (lsp-mode . lsp-enable-which-key-integration)
+		 )
   :config (setq lsp-completion-enable-addtional-text-edit nil)
   )
 (setq company-minimum-prefix-length 1
-      company-idle-delay 0.0)
+	  company-idle-delay 0.0)
 (use-package company-lsp
   :ensure t
   :commands company-lsp)
@@ -184,6 +189,7 @@
   :ensure t
   :commands helm-lsp-workspace-symbol)
 
+
 (use-package lua-mode
   :ensure t
   :defer t)
@@ -191,9 +197,9 @@
 (use-package rainbow-delimiters
   :ensure t
   :hook ((lisp-mode . rainbow-delimiters-mode)
-	 (scheme-mode . rainbow-delimiters-mode)
-	 (emacs-lisp-mode . rainbow-delimiters-mode)
-	 (racket-mode . rainbow-delimiters-mode)))
+		 (scheme-mode . rainbow-delimiters-mode)
+		 (emacs-lisp-mode . rainbow-delimiters-mode)
+		 (racket-mode . rainbow-delimiters-mode)))
 
 (use-package hungry-delete
   :ensure t
@@ -208,20 +214,20 @@
   :defer t
   :config
   (setq lsp-ui-doc-delay 5.0
-	lsp-ui-sideline-enable nil
-	lsp-ui-sideline-show-symbol nil)
+		lsp-ui-sideline-enable nil
+		lsp-ui-sideline-show-symbol nil)
   )
 (use-package lsp-java
   :defer t
   :init
   (setq lsp-java-vmargs
-	(list "-noverify"
-	      "-Xmx4G"
-	      "-XX:+UseG1GC"
-	      "-XX:+UseStringDeduplication"
-	      "-javaagent:/Users/richard/dev/lombok.jar")
-	lsp-java-save-actions-organize-imports nil
-	)
+		(list "-noverify"
+			  "-Xmx4G"
+			  "-XX:+UseG1GC"
+			  "-XX:+UseStringDeduplication"
+			  "-javaagent:/Users/richard/dev/lombok.jar")
+		lsp-java-save-actions-organize-imports nil
+		)
   
   :config
   (add-hook 'java-mode-hook #'lsp)
@@ -241,29 +247,28 @@
   (dap-register-debug-template
    "localhost:5005"
    (list :type "java"
-	 :request "attach"
-	 :hostName "localhost"
-	 :port 5005))
+		 :request "attach"
+		 :hostName "localhost"
+		 :port 5005))
   (dap-register-debug-template
    "lxd"
    (list :type "java"
-	 :request "attach"
-	 :hostName "10.152.112.168"
-	 :port 5005))
+		 :request "attach"
+		 :hostName "10.152.112.168"
+		 :port 5005))
   )
 
 (use-package dap-java
   :ensure nil
   :defer t
   :after (lsp-java))
-;; (require 'lsp-java-boot)
 
 
 (use-package treemacs
   :defer t
   :init
   (add-hook 'treemacs-mode-hook
-            (lambda () (treemacs-resize-icons 15))))
+			(lambda () (treemacs-resize-icons 15))))
 
 ;; to enable the lenses
 
@@ -277,14 +282,14 @@
   "Term terinate hook.
 Kill buffer and close Window after the term exit."
   (let* ((buff (current-buffer))
-	 (win  (selected-window))
-	 (proc (get-buffer-process buff)))
-    (set-process-sentinel
-     proc
-     `(lambda (process event)
-	(if (string= event "finished\n")
-	    (and (kill-buffer ,buff)
-		 (delete-window ,win)))))))
+		 (win  (selected-window))
+		 (proc (get-buffer-process buff)))
+	(set-process-sentinel
+	 proc
+	 `(lambda (process event)
+		(if (string= event "finished\n")
+			(and (kill-buffer ,buff)
+				 (delete-window ,win)))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
 
@@ -293,32 +298,32 @@ Kill buffer and close Window after the term exit."
   "Toggle ansi term bottom."
   (interactive)
   (if (string-prefix-p "*ansi-term*" (buffer-name (current-buffer)) )
-      (delete-window)
-    (let ((buffer-name "*ansi-term*"))
-      (cond
-       ((not (cl-find buffer-name
-		      (mapcar (lambda (b) (buffer-name b)) (buffer-list))
-		      :test 'equal))
-	(split-window-vertically (floor (* 0.68 (window-height))))
-	(other-window 1)
-	(ansi-term "zsh"))
-       ((not (cl-find buffer-name
-		      (mapcar (lambda (w) (buffer-name (window-buffer w)))
-			      (window-list))
-		      :test 'equal))
-	(split-window-vertically (floor (* 0.68 (window-height))))
-	(other-window 1)
-	(switch-to-buffer buffer-name))
-       (t (switch-to-buffer-other-window buffer-name))))))
+	  (delete-window)
+	(let ((buffer-name "*ansi-term*"))
+	  (cond
+	   ((not (cl-find buffer-name
+					  (mapcar (lambda (b) (buffer-name b)) (buffer-list))
+					  :test 'equal))
+		(split-window-vertically (floor (* 0.68 (window-height))))
+		(other-window 1)
+		(ansi-term "zsh"))
+	   ((not (cl-find buffer-name
+					  (mapcar (lambda (w) (buffer-name (window-buffer w)))
+							  (window-list))
+					  :test 'equal))
+		(split-window-vertically (floor (* 0.68 (window-height))))
+		(other-window 1)
+		(switch-to-buffer buffer-name))
+	   (t (switch-to-buffer-other-window buffer-name))))))
 
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
-      backup-by-copying t    ; Don't delink hardlinks
-      version-control t      ; Use version numbers on backups
-      delete-old-versions t  ; Automatically delete excess backups
-      kept-new-versions 20   ; how many of the newest versions to keep
-      kept-old-versions 5    ; and how many of the old
-      )
+	  backup-by-copying t    ; Don't delink hardlinks
+	  version-control t      ; Use version numbers on backups
+	  delete-old-versions t  ; Automatically delete excess backups
+	  kept-new-versions 20   ; how many of the newest versions to keep
+	  kept-old-versions 5    ; and how many of the old
+	  )
 
 
 (custom-set-variables
@@ -328,10 +333,11 @@ Kill buffer and close Window after the term exit."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("0dd2666921bd4c651c7f8a724b3416e95228a13fca1aa27dc0022f4e023bf197" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+	("0dd2666921bd4c651c7f8a724b3416e95228a13fca1aa27dc0022f4e023bf197" "fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(package-selected-packages
    (quote
-    (yasnippet projectile lsp-java which-key company hungry-delete smartparens multi-term exec-path-from-shell evil evil-escape evil-leader magit monokai-theme one-themes))))
+	(yasnippet projectile lsp-java which-key company hungry-delete smartparens multi-term exec-path-from-shell evil evil-escape evil-leader magit monokai-theme one-themes)))
+ '(tab-width 4))
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
