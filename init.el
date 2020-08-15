@@ -45,11 +45,16 @@
 (require 'lsp-init)
 (add-hook 'java-mode-hook #'lsp)
 
-(use-package monokai-theme)
-(use-package one-themes)
-(use-package doom-themes)
-(use-package solarized-theme)
-(use-package exec-path-from-shell)
+(use-package monokai-theme
+  :defer t)
+(use-package one-themes
+  :defer t)
+(use-package doom-themes
+  :defer t)
+(use-package solarized-theme
+  :defer t)
+(use-package exec-path-from-shell
+  :defer t)
 
 (use-package evil
   :defer .1
@@ -68,13 +73,17 @@
   :hook
   (after-init . benchmark-init/deactivate))
 
-(use-package restart-emacs)
-(use-package paredit)
-(use-package smartparens)
-(use-package multi-term)
-
+(use-package restart-emacs
+  :defer t)
+(use-package paredit
+  :defer t)
+(use-package smartparens
+  :defer t)
+(use-package multi-term
+  :defer t)
 
 (use-package projectile
+  :defer t
   :bind
   (("C-c p f" . projectile-find-file))
   :init
@@ -118,16 +127,15 @@
   )
 
 (use-package imenu-list
-  :ensure t
+  :defer t
   :config
   (setq imenu-list-focus-after-activation t))
-
-
 
 (use-package helm
   :defer t)
 
 (use-package company
+  :defer t
   :init
   (setq company-backends '((company-files company-keywords company-capf company-dabbrev-code company-etags company-dabbrev)))
   :config
@@ -136,26 +144,22 @@
 
 (use-package magit
   :defer t
-  :ensure t)
+  )
 
 (use-package flycheck
-  :ensure t
+  :defer t
   )
 
 (use-package which-key
-  :ensure t
   :init (which-key-mode))
 
 (use-package racket-mode
-  :ensure t
   :defer t
   )
 (use-package quickrun
-  :ensure t
   :defer t)
 
 (use-package rust-mode
-  :ensure t
   :defer t)
 
 (use-package lsp-mode
@@ -172,10 +176,6 @@
   )
 (setq company-minimum-prefix-length 1
       company-idle-delay 0.0)
-;; optionally
-(use-package lsp-ui
-  :ensure t
-  :commands lsp-ui-mode)
 (use-package company-lsp
   :ensure t
   :commands company-lsp)
@@ -201,17 +201,19 @@
   :init
   (global-hungry-delete-mode 1))
 
-(use-package projectile)
 (use-package yasnippet :config (yas-global-mode))
-(use-package hydra)
+(use-package hydra
+  :defer t)
 (use-package lsp-ui
+  :defer t
   :config
   (setq lsp-ui-doc-delay 5.0
 	lsp-ui-sideline-enable nil
-	lsp-ui-sideline-show-symbol nil))
+	lsp-ui-sideline-show-symbol nil)
+  )
 (use-package lsp-java
+  :defer t
   :init
-  
   (setq lsp-java-vmargs
 	(list "-noverify"
 	      "-Xmx4G"
@@ -228,6 +230,7 @@
   )
 
 (use-package dap-mode
+  :defer t
   :ensure t
   :after lsp-mode
   :config
@@ -251,11 +254,13 @@
 
 (use-package dap-java
   :ensure nil
+  :defer t
   :after (lsp-java))
-(require 'lsp-java-boot)
+;; (require 'lsp-java-boot)
 
 
 (use-package treemacs
+  :defer t
   :init
   (add-hook 'treemacs-mode-hook
             (lambda () (treemacs-resize-icons 15))))
