@@ -34,6 +34,9 @@
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
+
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
@@ -55,8 +58,9 @@
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(mac ns x))
-	(exec-path-from-shell-initialize))
-  )
+	(setenv "SHELL" "/bin/zsh")
+	(exec-path-from-shell-initialize)
+	(exec-path-from-shell-copy-envs '("PATH"))))
 
 (use-package evil
   :defer .1
@@ -166,12 +170,15 @@
 
 (use-package lsp-mode
   :ensure t
+  :init
+  (add-to-list 'company-backends 'company-capf)
   :config
   (add-hook 'c-mode-hook #'lsp)
   (add-hook 'c++-mode-hook #'lsp)
   (add-hook 'python-mode-hook #'lsp)
   (add-hook 'rust-mode-hook #'lsp)
   (add-hook 'java-mode-hook #'lsp)
+  (setq read-process-output-max (* 1024 1024))
   (setq lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error"))
   :defer t
   :hook (
