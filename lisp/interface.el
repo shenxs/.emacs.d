@@ -7,6 +7,8 @@
 ;;关闭菜单栏
 (menu-bar-mode -1)
 
+(setq mac-use-title-bar -1)
+
 ;;图形模式下关闭滚动条
 (if (display-graphic-p)
     (progn

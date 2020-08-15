@@ -6,3 +6,7 @@ auto-save-list
 transient
 recentf*
 .lsp-session*
+workspace
+.lsp-session-v1
+eclipse.jdt.ls
+.dap-breakpoints

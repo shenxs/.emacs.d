@@ -47,6 +47,7 @@
   "//" 'evilnc-comment-or-uncomment-lines
   ";;" 'evilnc-comment-operator
   "qq" 'kill-emacs
+  "qr" 'restart-emacs
   "ff" 'helm-find-files
   "bb" 'helm-buffers-list
   "bd" 'kill-buffer

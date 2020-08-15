@@ -31,62 +31,36 @@
    (package-install 'use-package)
    (require 'use-package)))
 
+(require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
-;; cl - Common Lisp Extension
-;; (require 'cl-lib)
-
-;; Add Packages
-(defvar my/packages '(
-		      use-package
-		      ;; --- Better Editor ---
-		      smartparens
-		      multi-term
-        	      company-lsp
-		      ;; --- Major Mode ---
-		      paredit
-		      ;; --- Minor Mode ---
-		      exec-path-from-shell
-		      evil-escape
-		      evil-leader
-		      evil-magit
-		      evil-nerd-commenter
-		      ;; --- Themes ---
-		      monokai-theme
-		      doom-themes
-		      one-themes
-		      spacemacs-theme
-		      ;;solarized-theme
-		      ) "Default packages.")
-
-(setq package-selected-packages my/packages)
-
-(defun my/packages-installed-p ()
-  "Check if all the package is installed."
-  (cl-loop for pkg in my/packages
-	when (not (package-installed-p pkg)) do (cl-return nil)
-	finally (cl-return t)))
-
-(unless (my/packages-installed-p)
-  (message "%s" "Refreshing package database...")
-  (package-refresh-contents)
-  (dolist (pkg my/packages)
-    (when (not (package-installed-p pkg))
-      (package-install pkg))))
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
-
 (require 'interface)
 (require 'key-binding)
-(require 'evil)
-(require 'evil-magit)
-(require 'evil-leader)
 (require 'better-default)
+
 (require 'myscheme)
 (require 'lsp-init)
 (require 'lsp-java)
 (add-hook 'java-mode-hook #'lsp)
+
+(use-package monokai-theme)
+(use-package one-themes)
+(use-package doom-themes)
+(use-package solarized-theme)
+(use-package exec-path-from-shell)
+
+(use-package evil
+  :defer .1
+  :init
+  (use-package evil-escape)
+  (use-package evil-leader)
+  (use-package evil-magit)
+  :config
+  (evil-mode)
+  (evil-escape-mode))
 
 (use-package benchmark-init
   :ensure t
@@ -95,6 +69,12 @@
   :hook
   (after-init . benchmark-init/deactivate))
 
+(use-package restart-emacs)
+(use-package paredit)
+(use-package smartparens)
+(use-package multi-term)
+
+
 (use-package helm
   :ensure t
   :defer t)
@@ -102,6 +82,7 @@
 (use-package company
   :ensure t
   :config
+  (use-package company-lsp)
   :init (global-company-mode 1))
 
 (use-package magit
