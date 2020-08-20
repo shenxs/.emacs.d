@@ -26,6 +26,8 @@
 (display-time-mode)
 (toggle-truncate-lines 1)
 (custom-set-variables '(tab-width 4))
+(setq comp-speed 3
+      comp-deferred-compilation t)
 
 (provide 'better-default)
 ;;; better-default.el ends here
