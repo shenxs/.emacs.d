@@ -63,7 +63,7 @@
 	(exec-path-from-shell-copy-envs '("PATH"))))
 
 (use-package evil
-  :defer .1
+  :defer t
   :init
   (use-package evil-escape)
   (use-package evil-leader)
@@ -71,6 +71,9 @@
   :config
   (evil-mode)
   (evil-escape-mode))
+
+(use-package beancount
+  :defer t)
 
 (use-package benchmark-init
   :ensure t
