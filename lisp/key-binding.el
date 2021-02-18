@@ -9,6 +9,11 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 
+;;打开dashboard页面
+(defun open-dashboard()
+	(interactive)
+  (switch-to-buffer "*dashboard*"))
+
 (global-evil-leader-mode)
 (evil-leader/set-leader "<SPC>")
 (evil-mode)
@@ -51,14 +56,15 @@
   "ff" 'helm-find-files
   "bb" 'helm-buffers-list
   "bd" 'kill-buffer
-  "'"  'toggle-ansi-term)
+  "'"  'toggle-ansi-term
+  "bh" 'open-dashboard)
 
 (global-set-key (kbd "M-\-") 'text-scale-decrease)
 (global-set-key (kbd "M-=") 'text-scale-increase)
-	
+
 (add-hook 'lisp-interaction-mode
-	  (lambda ()
-	    (define-key lisp-interaction-mode-map (kbd "<f5>") 'eval-buffer)))
+		  (lambda ()
+			(define-key lisp-interaction-mode-map (kbd "<f5>") 'eval-buffer)))
 
 
 (provide 'key-binding)

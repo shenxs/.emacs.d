@@ -40,7 +40,6 @@
   :ensure t
   :init (doom-modeline-mode))
 
-
 ;;; OPTIONAL
 ;; brighter source buffers (that represent files)
 ;; (add-hook 'find-file-hook #'doom-buffer-mode-maybe)
