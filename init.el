@@ -174,14 +174,34 @@
 (use-package rust-mode
   :defer t)
 
-(require 'dashboard)
-(dashboard-setup-startup-hook)
-;; Or if you use use-package
 (use-package dashboard
   :ensure t
   :config
   (dashboard-setup-startup-hook)
+  (setq dashboard-items '((recents  . 5)
+                        (projects . 5)
+                        (bookmarks . 5)
+                        (agenda . 5)
+                        (registers . 5)))
   (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))
+  (setq dashboard-center-content t)
+  
+  (defun dashboard-goto-recent-files ()
+	"Go to recent files."
+	(interactive)
+	(funcall (local-key-binding "r")))
+
+  (defun dashboard-goto-projects ()
+	"Go to projects."
+	(interactive)
+	(funcall (local-key-binding "p")))
+  
+  (with-eval-after-load 'evil
+	(evil-define-key 'normal dashboard-mode-map
+	  "g" 'dashboard-refresh-buffer
+	  "p" 'dashboard-goto-projects
+	  "r" 'dashboard-goto-recent-files
+	  "R" 'restore-session))
   )
 
 (use-package lsp-mode
