@@ -42,6 +42,7 @@
 (evil-leader/set-key
   "gs" 'magit-status
   "wd" 'delete-window
+  "wD" 'delete-other-windows
   "hf" 'describe-function
   "bp" 'previous-buffer
   "bn" 'next-buffer
@@ -57,7 +58,8 @@
   "bb" 'helm-buffers-list
   "bd" 'kill-buffer
   "'"  'toggle-ansi-term
-  "bh" 'open-dashboard)
+  "bh" 'open-dashboard
+  )
 
 (global-set-key (kbd "M-\-") 'text-scale-decrease)
 (global-set-key (kbd "M-=") 'text-scale-increase)

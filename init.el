@@ -18,9 +18,9 @@
 
 
 ;;set mirror
-(setq package-archives '(("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
-			 ("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
-			 ))
+;; (setq package-archives '(("gnu-cn"   . "http://elpa.emacs-china.org/gnu/")
+;; 			 ("melpa-cn" . "http://elpa.emacs-china.org/melpa/")
+;; 			 ))
 
 (condition-case nil
     (require 'use-package)
@@ -36,7 +36,6 @@
 
 (when (memq window-system '(mac ns x))
   (exec-path-from-shell-initialize))
-
 
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
@@ -78,13 +77,6 @@
   :mode ("\\.bean$" . beancount-mode)
   :defer t)
 
-(use-package benchmark-init
-  :ensure t
-  :init
-  (benchmark-init/activate)
-  :hook
-  (after-init . benchmark-init/deactivate))
-
 (use-package restart-emacs
   :defer t)
 (use-package paredit
@@ -93,50 +85,6 @@
   :defer t)
 (use-package multi-term
   :defer t)
-
-(use-package projectile
-  :defer t
-  :bind
-  (("C-c p f" . projectile-find-file))
-  :init
-  (setq projectile-enable-caching t
-		projectile-globally-ignored-file-suffixes
-		'(
-		  "blob"
-		  "class"
-		  "classpath"
-		  "gz"
-		  "iml"
-		  "ipr"
-		  "jar"
-		  "pyc"
-		  "tkj"
-		  "war"
-		  "xd"
-		  "zip"
-		  )
-		projectile-globally-ignored-files '("TAGS" "*~")
-		projectile-tags-command "/usr/bin/ctags -Re -f \"%s\" %s"
-		projectile-mode-line '(:eval (format " [%s]" (projectile-project-name)))
-		)
-  :config
-  (projectile-global-mode)
-
-  (setq projectile-globally-ignored-directories
-		(append (list
-				 ".pytest_cache"
-				 "__pycache__"
-				 "build"
-				 "elpa"
-				 "node_modules"
-				 "output"
-				 "reveal.js"
-				 "semanticdb"
-				 "target"
-				 "venv"
-				 )
-				projectile-globally-ignored-directories))
-  )
 
 (use-package imenu-list
   :defer t
@@ -269,52 +217,6 @@
 		lsp-ui-sideline-enable nil
 		lsp-ui-sideline-show-symbol nil)
   )
-(use-package lsp-java
-  :defer t
-  :init
-  (setq lsp-java-vmargs
-		(list "-noverify"
-			  "-Xmx4G"
-			  "-XX:+UseG1GC"
-			  "-XX:+UseStringDeduplication"
-			  "-javaagent:/Users/richard/dev/lombok.jar")
-		lsp-java-save-actions-organize-imports nil
-		)
-  
-  :config
-  (add-hook 'java-mode-hook #'lsp)
-  (add-hook 'lsp-mode-hook #'lsp-lens-mode)
-  (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode)
-  )
-
-(use-package dap-mode
-  :defer t
-  :ensure t
-  :after lsp-mode
-  :config
-  (dap-mode t)
-  (dap-ui-mode t)
-  (dap-tooltip-mode 1)
-  (tooltip-mode 1)
-  (dap-register-debug-template
-   "localhost:5005"
-   (list :type "java"
-		 :request "attach"
-		 :hostName "localhost"
-		 :port 5005))
-  (dap-register-debug-template
-   "lxd"
-   (list :type "java"
-		 :request "attach"
-		 :hostName "10.152.112.168"
-		 :port 5005))
-  )
-
-(use-package dap-java
-  :ensure nil
-  :defer t
-  :after (lsp-java))
-
 
 (use-package treemacs
   :defer t
@@ -344,7 +246,6 @@ Kill buffer and close Window after the term exit."
 				 (delete-window ,win)))))))
 
 (add-hook 'term-exec-hook 'oleh-term-exec-hook)
-
 
 (defun toggle-ansi-term ()
   "Toggle ansi term bottom."
