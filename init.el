@@ -41,8 +41,6 @@
   :ensure t
   :config (exec-path-from-shell-initialize))
 
-
-
 (use-package doom-themes
   :ensure t
   :config
@@ -64,8 +62,6 @@
 (use-package doom-modeline
   :ensure t
   :hook (after-init . doom-modeline-mode))
-
-
 
 (use-package evil
   :ensure t
@@ -116,7 +112,6 @@
 
 (use-package hungry-delete
   :ensure t
-  :defer 5
   :hook (after-init . global-hungry-delete-mode)
   )
 
@@ -159,20 +154,37 @@
   :commands web-mode)
 
 
-;; lsp-mode
-;; (setq lsp-log-io nil) ;; Don't log everything = speed
-(setq lsp-ui-sideline-show-diagnostics t)
-(setq lsp-ui-sideline-show-hover t)
-(setq lsp-ui-sideline-show-code-actions t)
 
 (use-package lsp-mode
   :ensure t
+  :init
+  (setq read-process-output-max (* 1024 1024)) ;; 1MB
+  (setq   lsp-keep-workspace-alive nil
+          lsp-signature-auto-activate nil
+          lsp-modeline-code-actions-enable nil
+          lsp-modeline-diagnostics-enable nil
+          lsp-modeline-workspace-status-enable nil
+
+          lsp-enable-file-watchers nil
+          lsp-enable-folding nil
+          lsp-enable-symbol-highlighting nil
+          lsp-enable-text-document-color nil
+
+          lsp-enable-indentation nil
+          lsp-enable-on-type-formatting nil)
   :hook ((lsp-mode . lsp-enable-which-key-integration)
 	 (web-mode . lsp)
 	 (c++-mode . lsp)
-	 (python-mode . lsp)
 	 )
   :commands lsp)
+
+
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-pyright)
+                          (lsp))))  ; or lsp-deferred
+
 
 
 (use-package lsp-ui
@@ -181,14 +193,6 @@
 
 (use-package prettier-js
   :ensure t)
-
-(add-hook
- 'web-mode-hook
- #'(lambda ()
-     (enable-minor-mode
-      '("\\.jsx?\\'" . prettier-js-mode))
-     (enable-minor-mode
-      '("\\.tsx?\\'" . prettier-js-mode))))
 
 (use-package ivy
   :ensure t
@@ -238,6 +242,15 @@
     (add-hook 'scheme-mode-hook 'paredit-mode)
     (add-hook 'racket-mode-hook 'paredit-mode)))
 
+(use-package shell-pop
+  :ensure t
+  :bind (("C-`" . shell-pop))
+  :config
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  (setq shell-pop-term-shell "/bin/zsh")
+   ;; need to do this manually or not picked up by `shell-pop'
+  (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
