@@ -11,3 +11,5 @@ workspace
 eclipse.jdt.ls
 .dap-breakpoints
 projectile-bookmarks.eld
+.local
+eln-cache
