@@ -86,7 +86,9 @@
   (with-eval-after-load 'evil-maps
     (define-key evil-motion-state-map (kbd ";") 'evil-ex)
     )
-  (evil-mode 1))
+  (evil-mode 1)
+  ;; (define-key evil-normal-state-map (kbd "<RET>") 'ivy-switch-buffer)
+  )
 
 (use-package evil-escape
   :ensure t
@@ -108,6 +110,11 @@
     "hf" 'describe-function
     "hv" 'describe-variable
     "ot" 'shell-pop
+    "bb" 'ivy-switch-buffer
+    "bd" 'kill-buffer
+    "jj" 'avy-goto-char-2
+    "jw" 'avy-goto-word-1
+    "jl" 'avy-goto-line
     ))
 
 (use-package dashboard
