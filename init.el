@@ -79,6 +79,7 @@
 
 (use-package evil
   :ensure t
+  :after evil-leader
   :init
   (setq evil-want-keybinding nil)
   :config
@@ -93,6 +94,21 @@
   :init (setq-default evil-escape-key-sequence "jk")
   :config (evil-escape-mode 1)
   )
+
+(use-package evil-leader
+  :ensure t
+  :init
+  (setq evil-want-keybinding nil)
+  (global-evil-leader-mode)
+  :config
+  (evil-leader/set-leader "<SPC>")
+  (evil-leader/set-key
+    "gg" 'magit
+    "ff" 'find-file
+    "hf" 'describe-function
+    "hv" 'describe-variable
+    "ot" 'shell-pop
+    ))
 
 (use-package dashboard
   :ensure t
@@ -189,8 +205,8 @@
 (use-package lsp-pyright
   :ensure t
   :hook (python-mode . (lambda ()
-                          (require 'lsp-pyright)
-                          (lsp))))  ; or lsp-deferred
+			 (require 'lsp-pyright)
+			 (lsp))))  ; or lsp-deferred
 
 
 
@@ -255,7 +271,7 @@
   :config
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (setq shell-pop-term-shell "/bin/zsh")
-   ;; need to do this manually or not picked up by `shell-pop'
+  ;; need to do this manually or not picked up by `shell-pop'
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
   )
 
@@ -264,7 +280,7 @@
   :config
   (global-set-key (kbd "s-1") 'treemacs)
   (with-eval-after-load 'treemacs
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+    (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
   )
 
