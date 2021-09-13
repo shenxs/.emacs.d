@@ -40,6 +40,20 @@
   :if (memq window-system '(ns mac))
   :ensure t
   :config (exec-path-from-shell-initialize))
+(add-to-list 'load-path "~/.emacs.d/elisp/scheme-complete/")
+(add-to-list 'load-path "~/.emacs.d/elisp/scribble-mode/")
+(require 'scheme-complete)
+(require 'scribble-mode)
+(add-hook 'scribble-mode-hook #'geiser-mode)
+(autoload 'scheme-smart-complete "scheme-complete" nil t)
+(eval-after-load 'scheme
+  '(define-key scheme-mode-map "\t" 'scheme-complete-or-indent))
+(autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
+(add-hook 'scheme-mode-hook
+  (lambda ()
+    (make-local-variable 'eldoc-documentation-function)
+    (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
+    (eldoc-mode)))
 
 (use-package doom-themes
   :ensure t
@@ -52,9 +66,9 @@
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
+  ;; (doom-themes-neotree-config)
   ;; or for treemacs users
-  ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
   (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
@@ -144,6 +158,13 @@
   :defer 2
   :ensure t)
 
+(use-package geiser
+  :ensure t)
+
+(use-package  geiser-chez
+  :ensure t
+  )
+
 ;; web-mode
 (setq web-mode-markup-indent-offset 2)
 (setq web-mode-code-indent-offset 2)
@@ -158,20 +179,6 @@
 (use-package lsp-mode
   :ensure t
   :init
-  (setq read-process-output-max (* 1024 1024)) ;; 1MB
-  (setq   lsp-keep-workspace-alive nil
-          lsp-signature-auto-activate nil
-          lsp-modeline-code-actions-enable nil
-          lsp-modeline-diagnostics-enable nil
-          lsp-modeline-workspace-status-enable nil
-
-          lsp-enable-file-watchers nil
-          lsp-enable-folding nil
-          lsp-enable-symbol-highlighting nil
-          lsp-enable-text-document-color nil
-
-          lsp-enable-indentation nil
-          lsp-enable-on-type-formatting nil)
   :hook ((lsp-mode . lsp-enable-which-key-integration)
 	 (web-mode . lsp)
 	 (c++-mode . lsp)
@@ -252,6 +259,24 @@
   (shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type)
   )
 
+(use-package treemacs
+  :ensure t
+  :config
+  (global-set-key (kbd "s-1") 'treemacs)
+  (with-eval-after-load 'treemacs
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+
+  )
+
+(use-package treemacs-evil
+  :ensure t)
+
+(use-package treemacs-projectile
+  :ensure t)
+
+(use-package hydra
+  :ensure t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -259,7 +284,7 @@
  ;; If there is more than one, they won't work right.
  '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
-   '(paredit smartparens projectile lsp-treemacs yasnippet elisp-benchmarks helm racket-mode rainbow-delimiters json-mode which-key company-statistics company))
+   '(paredit smartparens projectile lsp-treemacs yasnippet elisp-benchmarks racket-mode rainbow-delimiters json-mode which-key company-statistics company))
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
