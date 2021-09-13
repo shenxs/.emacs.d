@@ -19,16 +19,6 @@
   (package-install 'use-package))
 (require 'use-package)
 
-;;interface
-(toggle-scroll-bar -1)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(xterm-mouse-mode 1)
-
-(fset 'yes-or-no-p 'y-or-n-p)
-;; display “lambda” as “λ”
-(global-prettify-symbols-mode 1)
-
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
 (global-set-key (kbd "s-/") 'comment-line)
@@ -40,20 +30,20 @@
   :if (memq window-system '(ns mac))
   :ensure t
   :config (exec-path-from-shell-initialize))
-(add-to-list 'load-path "~/.emacs.d/elisp/scheme-complete/")
-(add-to-list 'load-path "~/.emacs.d/elisp/scribble-mode/")
-(require 'scheme-complete)
-(require 'scribble-mode)
-(add-hook 'scribble-mode-hook #'geiser-mode)
-(autoload 'scheme-smart-complete "scheme-complete" nil t)
-(eval-after-load 'scheme
-  '(define-key scheme-mode-map "\t" 'scheme-complete-or-indent))
-(autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
-(add-hook 'scheme-mode-hook
-  (lambda ()
-    (make-local-variable 'eldoc-documentation-function)
-    (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
-    (eldoc-mode)))
+;; (add-to-list 'load-path "~/.emacs.d/elisp/scheme-complete/")
+;; (add-to-list 'load-path "~/.emacs.d/elisp/scribble-mode/")
+;; (require 'scheme-complete)
+;; (require 'scribble-mode)
+;; (add-hook 'scribble-mode-hook #'geiser-mode)
+;; (autoload 'scheme-smart-complete "scheme-complete" nil t)
+;; (eval-after-load 'scheme
+  ;; '(define-key scheme-mode-map "\t" 'scheme-complete-or-indent))
+;; (autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
+;; (add-hook 'scheme-mode-hook
+  ;; (lambda ()
+    ;; (make-local-variable 'eldoc-documentation-function)
+    ;; (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
+    ;; (eldoc-mode)))
 
 (use-package doom-themes
   :ensure t
@@ -79,6 +69,7 @@
 
 (use-package evil
   :ensure t
+  :defer t
   :after evil-leader
   :init
   (setq evil-want-keybinding nil)
@@ -112,6 +103,7 @@
     "ot" 'shell-pop
     "bb" 'ivy-switch-buffer
     "bd" 'kill-buffer
+    "bh" 'dashboard-refresh-buffer
     "jj" 'avy-goto-char-2
     "jw" 'avy-goto-word-1
     "jl" 'avy-goto-line
@@ -136,56 +128,62 @@
 
 (use-package which-key
   :ensure t
-  :defer 5
+  :defer t
   :hook (after-init . which-key-mode)
   )
 
 (use-package evil-collection
   :after evil
   :ensure t
-  :defer 5
   :hook (after-init . evil-collection-init)
   )
 
 (use-package hungry-delete
   :ensure t
+  :defer t
   :hook (after-init . global-hungry-delete-mode)
   )
 
 (use-package company
   :ensure t
+  :defer t
   :init
   (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package magit
-  :defer 3
+  :defer t
   :ensure t)
 
 (use-package git-gutter+
   :ensure t
+  :defer t
   :config
   (progn
     (global-git-gutter+-mode)))
 
 (use-package json-mode
-  :defer 4
+  :defer t
   :ensure t)
 
 (use-package rainbow-delimiters
   :ensure t
+  :defer t
   :config
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   )
 
 (use-package racket-mode
-  :defer 2
+  :defer t
   :ensure t)
 
 (use-package geiser
-  :ensure t)
+  :ensure t
+  :defer t
+  )
 
 (use-package  geiser-chez
   :ensure t
+  :defer t
   )
 
 ;; web-mode
@@ -194,6 +192,7 @@
 (setq web-mode-css-indent-offset 2)
 (use-package web-mode
   :ensure t
+  :defer t
   :mode ("\\.js\\'" "\\.jsx\\'" "\\.ts\\'" "\\.tsx\\'" "\\.css\\'" "\\.html\\'")
   :commands web-mode)
 
@@ -201,6 +200,7 @@
 
 (use-package lsp-mode
   :ensure t
+  :defer t
   :init
   :hook ((lsp-mode . lsp-enable-which-key-integration)
 	 (web-mode . lsp)
@@ -211,6 +211,7 @@
 
 (use-package lsp-pyright
   :ensure t
+  :defer t
   :hook (python-mode . (lambda ()
 			 (require 'lsp-pyright)
 			 (lsp))))  ; or lsp-deferred
@@ -219,21 +220,26 @@
 
 (use-package lsp-ui
   :ensure t
+  :defer t
   :commands lsp-ui-mode)
 
 (use-package prettier-js
+  :defer t
   :ensure t)
 
 (use-package ivy
   :ensure t
+  :defer t
   :hook (after-init . ivy-mode))
 
 (use-package lsp-ivy
   :ensure t
+  :defer t
   :commands lsp-ivy-workspace-symbol)
 
 (use-package yasnippet
   :ensure t
+  :defer t
   :config
   (yas-global-mode))
 
@@ -241,22 +247,28 @@
   :ensure t)
 
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :defer t
+  )
 
 (use-package flycheck
   :ensure t
+  :defer t
   :init (global-flycheck-mode))
 
 (use-package avy
   :ensure t
+  :defer t
   :config
   (global-set-key (kbd "C-'") 'avy-goto-char-2))
 
 (use-package dap-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package smartparens-config
   :ensure smartparens
+  :defer t
   :init    (smartparens-global-mode t)
   :config
   (sp-local-pair 'emacs-lisp-mode "'" nil :actions nil)
@@ -274,7 +286,7 @@
 
 (use-package shell-pop
   :ensure t
-  :bind (("C-`" . shell-pop))
+  :defer t
   :config
   (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
   (setq shell-pop-term-shell "/bin/zsh")
@@ -284,6 +296,7 @@
 
 (use-package treemacs
   :ensure t
+  :defer t
   :config
   (global-set-key (kbd "s-1") 'treemacs)
   (with-eval-after-load 'treemacs
@@ -292,13 +305,17 @@
   )
 
 (use-package treemacs-evil
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package treemacs-projectile
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package hydra
-  :ensure t)
+  :ensure t
+  :defer t
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
