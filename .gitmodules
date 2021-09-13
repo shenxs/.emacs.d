@@ -1,3 +1,6 @@
 [submodule "lisp/snails"]
 	path = lisp/snails
 	url = https://github.com/manateelazycat/snails.git
+[submodule "elisp/scribble-mode"]
+	path = elisp/scribble-mode
+	url = https://github.com/emacs-pe/scribble-mode.git
