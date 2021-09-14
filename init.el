@@ -29,7 +29,9 @@
 (use-package exec-path-from-shell
   :if (memq window-system '(ns mac))
   :ensure t
-  :config (exec-path-from-shell-initialize))
+  :config
+  (setq exec-path-from-shell-arguments '("-l"))
+  (exec-path-from-shell-initialize))
 ;; (add-to-list 'load-path "~/.emacs.d/elisp/scheme-complete/")
 ;; (add-to-list 'load-path "~/.emacs.d/elisp/scribble-mode/")
 ;; (require 'scheme-complete)
