@@ -2,8 +2,10 @@
 ;;; Commentary:
 
 ;;; code:
-(setq read-process-output-max (* 1024 1024))
-(setq gc-cons-threshold 100000000)
+
+(load "server")
+(unless (server-running-p) (server-start))
+
 (setq package-native-compile t)
 (require 'package)
 (require 'project)
