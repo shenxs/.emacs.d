@@ -69,9 +69,31 @@
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
+(use-package evil-leader
+  :ensure t
+  :init
+  (setq evil-want-keybinding nil)
+  (global-evil-leader-mode)
+  (evil-leader/set-leader "<SPC>")
+  :config
+  (evil-leader/set-key
+    "gg" 'magit
+    "ff" 'find-file
+    "hf" 'describe-function
+    "hv" 'describe-variable
+    "ot" 'shell-pop
+    "bb" 'ivy-switch-buffer
+    "bd" 'kill-buffer
+    "bh" 'dashboard-refresh-buffer
+    "jj" 'avy-goto-char-2
+    "jw" 'avy-goto-word-1
+    "jl" 'avy-goto-line
+    ))
+
+
 (use-package evil
   :ensure t
-  :defer t
+  :defer 0.5
   :after evil-leader
   :init
   (setq evil-want-keybinding nil)
@@ -89,27 +111,6 @@
   :init (setq-default evil-escape-key-sequence "jk")
   :config (evil-escape-mode 1)
   )
-
-(use-package evil-leader
-  :ensure t
-  :init
-  (setq evil-want-keybinding nil)
-  (global-evil-leader-mode)
-  :config
-  (evil-leader/set-leader "<SPC>")
-  (evil-leader/set-key
-    "gg" 'magit
-    "ff" 'find-file
-    "hf" 'describe-function
-    "hv" 'describe-variable
-    "ot" 'shell-pop
-    "bb" 'ivy-switch-buffer
-    "bd" 'kill-buffer
-    "bh" 'dashboard-refresh-buffer
-    "jj" 'avy-goto-char-2
-    "jw" 'avy-goto-word-1
-    "jl" 'avy-goto-line
-    ))
 
 (use-package dashboard
   :ensure t
