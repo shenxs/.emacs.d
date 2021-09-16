@@ -21,12 +21,17 @@
   (package-install 'use-package))
 (require 'use-package)
 
+
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
 (global-set-key (kbd "s-/") 'comment-line)
 
-(setq make-backup-files nil
-      create-lockfiles nil) ;; lock files will kill `npm start'
+(setq backup-directory-alist `(("." . "~/.saves")))
+(setq backup-by-copying t)
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)
 
 (use-package exec-path-from-shell
   :if (memq window-system '(ns mac))
@@ -55,7 +60,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-one t)
+  ;; (load-theme 'doom-one t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -100,6 +105,8 @@
     "jj" 'avy-goto-char-2
     "jw" 'avy-goto-word-1
     "jl" 'avy-goto-line
+    "pf" 'project-find-file
+    "ps" 'project-find-regexp
     ))
 
 
@@ -264,6 +271,9 @@
 (use-package projectile
   :ensure t
   :defer t
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   )
 
 (use-package flycheck
@@ -332,18 +342,19 @@
   :defer t
   )
 
+
 (use-package markdown-mode
   :ensure t
   :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode)
-         ("\\.markdown\\'" . markdown-mode))
+	 ("\\.md\\'" . markdown-mode)
+	 ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
 (use-package org
   :ensure t
-)
+  )
 
 
 
