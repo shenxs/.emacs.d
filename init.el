@@ -106,7 +106,7 @@
     "jw" 'avy-goto-word-1
     "jl" 'avy-goto-line
     "pf" 'project-find-file
-    "ps" 'project-find-regexp
+    "ps" 'projectile-ripgrep
     ))
 
 
@@ -189,7 +189,6 @@
 
 (use-package rainbow-delimiters
   :ensure t
-  :defer t
   :config
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   )
@@ -273,8 +272,13 @@
   :defer t
   :config
   (projectile-mode +1)
+  (setq projectile-completion-system 'ivy)
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
   )
+
+(use-package projectile-ripgrep
+  :ensure
+  :defer t)
 
 (use-package flycheck
   :ensure t
@@ -356,6 +360,35 @@
   :ensure t
   )
 
+;;;;;;;;;;;;;;UI;;;;;;;;;;;;;;
+(use-package hl-todo
+  :ensure t
+  ;;TODO/FIXME/NOTE/HACK/REVIEW/
+  :hook (prog-mode . hl-todo-mode)
+  :hook (yaml-mode . hl-todo-mode)
+  :config
+  (setq hl-todo-highlight-punctuation ":"
+	hl-todo-keyword-faces
+	`(;; For things that need to be done, just not today.
+	  ("TODO" warning bold)
+	  ;; For problems that will become bigger problems later if not
+	  ;; fixed ASAP.
+	  ("FIXME" error bold)
+	  ;; For tidbits that are unconventional and not intended uses of the
+	  ;; constituent parts, and may break in a future update.
+	  ("HACK" font-lock-constant-face bold)
+	  ;; For things that were done hastily and/or hasn't been thoroughly
+	  ;; tested. It may not even be necessary!
+	  ("REVIEW" font-lock-keyword-face bold)
+	  ;; For especially important gotchas with a given implementation,
+	  ;; directed at another user other than the author.
+	  ("NOTE" success bold)
+	  ;; For things that just gotta go and will soon be gone.
+	  ("DEPRECATED" font-lock-doc-face bold)
+	  ;; For a known bug that needs a workaround
+	  ("BUG" error bold)
+	  ;; For warning about a problematic or misguiding code
+	  ("XXX" font-lock-constant-face bold))))
 
 
 (custom-set-variables
