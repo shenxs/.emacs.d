@@ -71,6 +71,16 @@
   :ensure t
   :hook (after-init . doom-modeline-mode))
 
+(defun my/apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (mapc #'disable-theme custom-enabled-themes)
+  (pcase appearance
+    ('light (load-theme 'doom-one-light t))
+    ('dark (load-theme 'doom-one t))))
+
+(add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
+
+
 (use-package evil-leader
   :ensure t
   :init
@@ -335,11 +345,15 @@
   :ensure t
 )
 
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" default))
  '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
    '(paredit smartparens projectile lsp-treemacs yasnippet elisp-benchmarks racket-mode rainbow-delimiters json-mode which-key company-statistics company))
