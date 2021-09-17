@@ -63,7 +63,7 @@
   ;; (load-theme 'doom-one t)
 
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
+  ;; (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
   ;; (doom-themes-neotree-config)
   ;; or for treemacs users
@@ -107,6 +107,7 @@
     "jl" 'avy-goto-line
     "pf" 'project-find-file
     "ps" 'projectile-ripgrep
+    "pp" 'project-switch-project
     ))
 
 
@@ -170,7 +171,10 @@
   :ensure t
   :defer t
   :init
-  (add-hook 'after-init-hook 'global-company-mode))
+  (setq company-backends '((company-files company-keywords company-capf company-dabbrev-code company-etags company-dabbrev)))
+  (setq company-minimum-prefix-length 2)
+  (add-hook 'after-init-hook 'global-company-mode)
+  )
 
 (use-package magit
   :defer t
@@ -389,6 +393,7 @@
 	  ("BUG" error bold)
 	  ;; For warning about a problematic or misguiding code
 	  ("XXX" font-lock-constant-face bold))))
+(electric-pair-mode 1)
 
 
 (custom-set-variables
