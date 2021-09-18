@@ -10,17 +10,16 @@
 (require 'package)
 (require 'project)
 (setq package-archives
-      '(("org"       . "https://orgmode.org/elpa/")
-	("gnu"       . "https://elpa.gnu.org/packages/")
-	("melpa"     . "https://melpa.org/packages/")
-	("marmalade" . "https://marmalade-repo.org/packages/")))
+	  '(("org"       . "https://orgmode.org/elpa/")
+		("gnu"       . "https://elpa.gnu.org/packages/")
+		("melpa"     . "https://melpa.org/packages/")
+		("marmalade" . "https://marmalade-repo.org/packages/")))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
-
 
 (global-set-key (kbd "<home>") 'beginning-of-line)
 (global-set-key (kbd "<end>") 'end-of-line)
@@ -29,9 +28,10 @@
 (setq backup-directory-alist `(("." . "~/.saves")))
 (setq backup-by-copying t)
 (setq delete-old-versions t
-  kept-new-versions 6
-  kept-old-versions 2
-  version-control t)
+	  kept-new-versions 6
+	  kept-old-versions 2
+	  version-control t)
+
 
 (use-package exec-path-from-shell
   :if (memq window-system '(ns mac))
@@ -46,24 +46,21 @@
 ;; (add-hook 'scribble-mode-hook #'geiser-mode)
 ;; (autoload 'scheme-smart-complete "scheme-complete" nil t)
 ;; (eval-after-load 'scheme
-  ;; '(define-key scheme-mode-map "\t" 'scheme-complete-or-indent))
+;; '(define-key scheme-mode-map "\t" 'scheme-complete-or-indent))
 ;; (autoload 'scheme-get-current-symbol-info "scheme-complete" nil t)
 ;; (add-hook 'scheme-mode-hook
-  ;; (lambda ()
-    ;; (make-local-variable 'eldoc-documentation-function)
-    ;; (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
-    ;; (eldoc-mode)))
+;; (lambda ()
+;; (make-local-variable 'eldoc-documentation-function)
+;; (setq eldoc-documentation-function 'scheme-get-current-symbol-info)
+;; (eldoc-mode)))
 
 (use-package doom-themes
   :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-	doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; (load-theme 'doom-one t)
+		doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-  ;; Enable flashing mode-line on errors
-  ;; (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
   ;; (doom-themes-neotree-config)
   ;; or for treemacs users
@@ -80,11 +77,12 @@
   "Load theme, taking current system APPEARANCE into consideration."
   (mapc #'disable-theme custom-enabled-themes)
   (pcase appearance
-    ('light (load-theme 'doom-one-light t))
-    ('dark (load-theme 'doom-one t))))
+	('light (load-theme 'doom-one-light t))
+	('dark (load-theme 'doom-one t))))
 
 (add-hook 'ns-system-appearance-change-functions #'my/apply-theme)
 
+;; 基本编辑体验
 
 (use-package evil-leader
   :ensure t
@@ -94,21 +92,29 @@
   (evil-leader/set-leader "<SPC>")
   :config
   (evil-leader/set-key
-    "gg" 'magit
-    "ff" 'find-file
-    "hf" 'describe-function
-    "hv" 'describe-variable
-    "ot" 'shell-pop
-    "bb" 'ivy-switch-buffer
-    "bd" 'kill-buffer
-    "bh" 'dashboard-refresh-buffer
-    "jj" 'avy-goto-char-2
-    "jw" 'avy-goto-word-1
-    "jl" 'avy-goto-line
-    "pf" 'project-find-file
-    "ps" 'projectile-ripgrep
-    "pp" 'project-switch-project
-    ))
+	"gg" 'magit
+	"ff" 'find-file
+	"hf" 'describe-function
+	"hv" 'describe-variable
+	"ot" 'shell-pop
+	"bb" 'ivy-switch-buffer
+	"bd" 'kill-buffer
+	"bh" 'dashboard-refresh-buffer
+	"jj" 'avy-goto-char-2
+	"jw" 'avy-goto-word-1
+	"jl" 'avy-goto-line
+	"pf" 'project-find-file
+	"ps" 'projectile-ripgrep
+	"pp" 'project-switch-project
+	))
+
+(use-package saveplace
+  :ensure nil
+  :hook (after-init . save-place-mode))
+
+(use-package autorevert
+  :ensure nil
+  :hook (after-init . global-auto-revert-mode))
 
 
 (use-package evil
@@ -119,8 +125,8 @@
   (setq evil-want-keybinding nil)
   :config
   (with-eval-after-load 'evil-maps
-    (define-key evil-motion-state-map (kbd ";") 'evil-ex)
-    )
+	(define-key evil-motion-state-map (kbd ";") 'evil-ex)
+	)
   (evil-mode 1)
   ;; (define-key evil-normal-state-map (kbd "<RET>") 'ivy-switch-buffer)
   )
@@ -136,15 +142,15 @@
   :ensure t
   :init
   (setq dashboard-center-content t
-	dashboard-items '((recents  . 10)
-			  (bookmarks . 5)
-			  (projects . 5)
-			  (agenda . 5))
-	dashboard-heading-icons '((recents   . "file-text")
-				  (bookmarks . "bookmark")
-				  (agenda    . "calendar")
-				  (projects  . "briefcase")
-				  (registers . "database")))
+		dashboard-items '((recents  . 10)
+						  (bookmarks . 5)
+						  (projects . 5)
+						  (agenda . 5))
+		dashboard-heading-icons '((recents   . "file-text")
+								  (bookmarks . "bookmark")
+								  (agenda    . "calendar")
+								  (projects  . "briefcase")
+								  (registers . "database")))
   :config
   (dashboard-setup-startup-hook)
   )
@@ -163,7 +169,6 @@
 
 (use-package hungry-delete
   :ensure t
-  :defer t
   :hook (after-init . global-hungry-delete-mode)
   )
 
@@ -185,7 +190,7 @@
   :defer t
   :config
   (progn
-    (global-git-gutter+-mode)))
+	(global-git-gutter+-mode)))
 
 (use-package json-mode
   :defer t
@@ -228,18 +233,33 @@
   :defer t
   :init
   :hook ((lsp-mode . lsp-enable-which-key-integration)
-	 (web-mode . lsp)
-	 (c++-mode . lsp)
-	 )
-  :commands lsp)
+		 (java-mode . lsp)
+		 (web-mode . lsp)
+		 (c++-mode . lsp)
+		 )
+  :commands lsp
+  :config
+  )
 
+(use-package lsp-java
+  :init
+  (setq lsp-java-vmargs
+        (list
+         "-noverify"
+         "-Xmx4G"
+         "-XX:+UseG1GC"
+         "-XX:+UseStringDeduplication"
+		 "-javaagent:/Users/richard/dev/lombok.jar"
+         ))
+  :config
+  (add-hook 'java-mode-hook 'lsp))
 
 (use-package lsp-pyright
   :ensure t
   :defer t
   :hook (python-mode . (lambda ()
-			 (require 'lsp-pyright)
-			 (lsp))))  ; or lsp-deferred
+						 (require 'lsp-pyright)
+						 (lsp))))  ; or lsp-deferred
 
 
 
@@ -267,6 +287,9 @@
   :defer t
   :config
   (yas-global-mode))
+
+(use-package yasnippet-snippets
+  :ensure t)
 
 (use-package lsp-treemacs
   :ensure t)
@@ -297,7 +320,13 @@
 
 (use-package dap-mode
   :ensure t
-  :defer t)
+  :after (lsp-mode)
+  )
+
+
+(use-package dap-java
+  :ensure nil)
+
 
 (use-package smartparens-config
   :ensure smartparens
@@ -313,9 +342,9 @@
   :defer t
   :init
   (progn
-    (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-    (add-hook 'scheme-mode-hook 'paredit-mode)
-    (add-hook 'racket-mode-hook 'paredit-mode)))
+	(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+	(add-hook 'scheme-mode-hook 'paredit-mode)
+	(add-hook 'racket-mode-hook 'paredit-mode)))
 
 (use-package shell-pop
   :ensure t
@@ -333,9 +362,10 @@
   :config
   (global-set-key (kbd "s-1") 'treemacs)
   (with-eval-after-load 'treemacs
-    (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
-
+	(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
   )
+
+
 
 (use-package treemacs-evil
   :ensure t
@@ -356,8 +386,8 @@
   :defer t
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode)
-	 ("\\.md\\'" . markdown-mode)
-	 ("\\.markdown\\'" . markdown-mode))
+		 ("\\.md\\'" . markdown-mode)
+		 ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
 (use-package org
@@ -372,29 +402,30 @@
   :hook (yaml-mode . hl-todo-mode)
   :config
   (setq hl-todo-highlight-punctuation ":"
-	hl-todo-keyword-faces
-	`(;; For things that need to be done, just not today.
-	  ("TODO" warning bold)
-	  ;; For problems that will become bigger problems later if not
-	  ;; fixed ASAP.
-	  ("FIXME" error bold)
-	  ;; For tidbits that are unconventional and not intended uses of the
-	  ;; constituent parts, and may break in a future update.
-	  ("HACK" font-lock-constant-face bold)
-	  ;; For things that were done hastily and/or hasn't been thoroughly
-	  ;; tested. It may not even be necessary!
-	  ("REVIEW" font-lock-keyword-face bold)
-	  ;; For especially important gotchas with a given implementation,
-	  ;; directed at another user other than the author.
-	  ("NOTE" success bold)
-	  ;; For things that just gotta go and will soon be gone.
-	  ("DEPRECATED" font-lock-doc-face bold)
-	  ;; For a known bug that needs a workaround
-	  ("BUG" error bold)
-	  ;; For warning about a problematic or misguiding code
-	  ("XXX" font-lock-constant-face bold))))
-(electric-pair-mode 1)
+		hl-todo-keyword-faces
+		`(;; For things that need to be done, just not today.
+		  ("TODO" warning bold)
+		  ;; For problems that will become bigger problems later if not
+		  ;; fixed ASAP.
+		  ("FIXME" error bold)
+		  ;; For tidbits that are unconventional and not intended uses of the
+		  ;; constituent parts, and may break in a future update.
+		  ("HACK" font-lock-constant-face bold)
+		  ;; For things that were done hastily and/or hasn't been thoroughly
+		  ;; tested. It may not even be necessary!
+		  ("REVIEW" font-lock-keyword-face bold)
+		  ;; For especially important gotchas with a given implementation,
+		  ;; directed at another user other than the author.
+		  ("NOTE" success bold)
+		  ;; For things that just gotta go and will soon be gone.
+		  ("DEPRECATED" font-lock-doc-face bold)
+		  ;; For a known bug that needs a workaround
+		  ("BUG" error bold)
+		  ;; For warning about a problematic or misguiding code
+		  ("XXX" font-lock-constant-face bold))))
 
+(use-package quickrun
+  :ensure t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -405,7 +436,7 @@
    '("246a9596178bb806c5f41e5b571546bb6e0f4bd41a9da0df5dfbca7ec6e2250c" "835868dcd17131ba8b9619d14c67c127aa18b90a82438c8613586331129dda63" default))
  '(helm-minibuffer-history-key "M-p")
  '(package-selected-packages
-   '(paredit smartparens projectile lsp-treemacs yasnippet elisp-benchmarks racket-mode rainbow-delimiters json-mode which-key company-statistics company))
+   '(lsp-java paredit smartparens projectile lsp-treemacs yasnippet elisp-benchmarks racket-mode rainbow-delimiters json-mode which-key company-statistics company))
  '(warning-suppress-types '((comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
