@@ -32,14 +32,8 @@
 (global-prettify-symbols-mode 1)
 
 
-
 ;;basic setup
 (setq ring-bell-function 'ignore)
-
-
-;; Set language environment to UTF-8
-(set-language-environment "UTF-8")
-(set-default-coding-systems 'utf-8)
 
 ;;更好的换行展示
 (global-visual-line-mode 1)
@@ -55,7 +49,6 @@
 
 
 ;;展示行尾空格
-
 (setq show-trailing-whitespace 1)
 
 ;;防止文件过长
