@@ -106,6 +106,7 @@
 	"pf" 'project-find-file
 	"ps" 'projectile-ripgrep
 	"pp" 'project-switch-project
+	"'"  'shell-pop
 	))
 
 (use-package saveplace
@@ -128,7 +129,6 @@
 	(define-key evil-motion-state-map (kbd ";") 'evil-ex)
 	)
   (evil-mode 1)
-  ;; (define-key evil-normal-state-map (kbd "<RET>") 'ivy-switch-buffer)
   )
 
 (use-package evil-escape
@@ -174,12 +174,35 @@
 
 (use-package company
   :ensure t
-  :defer t
+  ;; :defer t
   :init
-  (setq company-backends '((company-files company-keywords company-capf company-dabbrev-code company-etags company-dabbrev)))
   (setq company-minimum-prefix-length 2)
+  (setq company-dabbrev-downcase 0)
+  (setq company-idle-delay 0.3)
   (add-hook 'after-init-hook 'global-company-mode)
   )
+
+(use-package company-dabbrev-code
+  :ensure nil
+  :config
+  (setq company-dabbrev-code-everywhere t
+		company-dabbrev-ignore-buffers nil
+        company-dabbrev-code-ignore-case nil))
+
+
+(use-package company-dabbrev
+  :ensure nil
+  :config
+  (setq company-dabbrev-downcase nil
+        company-dabbrev-ignore-case nil
+        company-dabbrev-minimum-length 3))
+
+
+(use-package company-quickhelp
+  :ensure t
+  :config
+  (company-quickhelp-mode 1))
+
 
 (use-package magit
   :defer t
@@ -206,9 +229,12 @@
   :defer t
   :ensure t)
 
+(add-to-list 'exec-path "/usr/local/bin")
+
 (use-package geiser
   :ensure t
-  :defer t
+  :config
+  (setq geiser-mode-start-repl-p t)
   )
 
 (use-package  geiser-chez
@@ -244,13 +270,13 @@
 (use-package lsp-java
   :init
   (setq lsp-java-vmargs
-        (list
-         "-noverify"
-         "-Xmx4G"
-         "-XX:+UseG1GC"
-         "-XX:+UseStringDeduplication"
+		(list
+		 "-noverify"
+		 "-Xmx4G"
+		 "-XX:+UseG1GC"
+		 "-XX:+UseStringDeduplication"
 		 "-javaagent:/Users/richard/dev/lombok.jar"
-         ))
+		 ))
   :config
   (add-hook 'java-mode-hook 'lsp))
 
